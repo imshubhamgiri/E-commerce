@@ -1,5 +1,5 @@
 import { Heart, ShoppingCart, Search } from 'lucide-react'
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import React from 'react'
 
 const Navbar2 = () => {
@@ -66,7 +66,7 @@ const Navbar2 = () => {
                     />
                 </div>
                 <span><Heart size={18}/></span>
-                <span><ShoppingCart size={18} /></span>
+                <Link to="/cart" className='cursor-pointer'><ShoppingCart size={18} /></Link>
             </div>
         </div>
     </div>

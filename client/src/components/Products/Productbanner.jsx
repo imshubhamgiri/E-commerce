@@ -19,7 +19,7 @@ const Productbanner= (newdata) => {
                   Get UpTo 50% Off
                 </p>
                 <Link
-                  to='/shop'
+                  to='/product'
                   className="flex items-center text-lg font-semibold w-fit pb-1 border-b-2 border-white hover:scale-110 hover:text-gray-300 transition duration-200"
                 >
                   Shop Now

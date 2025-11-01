@@ -23,7 +23,7 @@ const Promotion = () => {
       <div className='main w-full flex justify-center'>
         <p className='text-stone-100'>
             Hallowin sale For up to 50% off! Use Code "HALLOWIN50"
-            <NavLink to="/sale" className='underline ml-2 transition-transform inline-block font-semibold hover:scale-110 text-white'>
+            <NavLink to="/product" className='underline ml-2 transition-transform inline-block font-semibold hover:scale-110 text-white'>
               Shop Now
             </NavLink>
         </p>

@@ -4,7 +4,7 @@ import { Link, NavLink } from 'react-router-dom';
 import Productbanner from './Products/Productbanner';
 import Timestamp from './common/Timestamp';
 import { Button } from './ui/button';
-import Footer from './layout/Footer';
+
 
 const Main = () => {
  
@@ -131,7 +131,7 @@ const Main = () => {
             </div>
         </section>
 
-       <section className="third my-12 ml-20 flex flex-col gap-5">
+       <section className="third w-100vw overflow-x-hidden my-12 ml-20 flex flex-col gap-5">
           <div>
             <h3 className="text-2xl flex gap-1 font-semibold text-gray-900 mb-1"><span className='bg-black rounded-s-2xl'>❕</span>This Month</h3>
             </div>
@@ -146,7 +146,7 @@ const Main = () => {
                  <Button>View All Products</Button>
                 </div>
              </div>
-            <div className="flex py-3  gap-8 flex-nowrap no-scrollbar">  {/* keep scrolling, hide native scrollbar */}
+            <div className="flex py-3 w-fit overflow-x-auto   gap-8 flex-nowrap no-scrollbar">  {/* keep scrolling, hide native scrollbar */}
                 {[...Array(5)].map((_, i) => (
                     <div 
                       key={i} 
@@ -177,12 +177,13 @@ const Main = () => {
               </button> 
               <h2 className='flex flex-wrap text-white text-5xl'>
                 Enhance Your Music Experience
-                </h2> 
-                <Button variant="outline" size="lg">
-                  Shop Now
-                </Button> 
-            </div>  
-                <div 
+                </h2>
+                 <Link to={'/product'}>
+                <Button variant="outline" className={'cursor-pointer'} size="lg">
+                 Shop Now</Button>
+                </Link>
+            </div>
+                <div
                   className='
                      
                         shadow-2xl shadow-orange-700/50 // This creates the glowing background  '>
@@ -195,7 +196,7 @@ const Main = () => {
                   </div>
           </div>
 
-      <Footer/>    
+        
     </div>
     </>
   )
