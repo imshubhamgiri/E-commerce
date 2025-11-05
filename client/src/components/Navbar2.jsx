@@ -1,8 +1,11 @@
 import { Heart, ShoppingCart, Search } from 'lucide-react'
 import { Link, NavLink } from 'react-router-dom'
 import React from 'react'
+import { useCart } from '../Context/CartContext.jsx';
 
 const Navbar2 = () => {
+  const { cartItems } = useCart();
+
   return (
     <div className='px-12 pt-8 pb-4 border-b'>
         <div className='flex  justify-around items-center'>
@@ -23,12 +26,12 @@ const Navbar2 = () => {
                     </li>
                     <li>
                         <NavLink 
-                            to="/contact" 
+                            to="/product" 
                             className={({ isActive }) => 
                                 isActive ? 'underline ' : ''
                             }
                         >
-                            Contact
+                            Explore
                         </NavLink>
                     </li>
                     <li>
@@ -65,8 +68,15 @@ const Navbar2 = () => {
                         className='absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer'
                     />
                 </div>
-                <span><Heart size={18}/></span>
-                <Link to="/cart" className='cursor-pointer'><ShoppingCart size={18} /></Link>
+                <span className='relative'><Heart size={18}/>
+                 </span>
+                <Link to="/cart" className='cursor-pointer relative'><ShoppingCart size={18} />
+                {cartItems.length > 0 && (
+                    <span className='absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1'>
+                       {cartItems.length}
+                    </span>
+                )}
+                </Link>
             </div>
         </div>
     </div>

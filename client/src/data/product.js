@@ -36,7 +36,7 @@ export const product = [
         name: "Gaming Laptop",
         price: 129999,
         category: "Electronics",
-        image: "https://images.unsplash.com/photo-1603642891917-04ab610ae4a2?auto=format&fit=crop&w=1650&q=80",
+        image: "https://m.media-amazon.com/images/I/61nTNphSBvL._SX569_.jpg",
         description: "High-performance laptop for gaming and creative work.",
     },
     {
@@ -44,7 +44,7 @@ export const product = [
         name: "Digital Camera",
         price: 59999,
         category: "Electronics",
-        image: "https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?auto=format&fit=crop&w=1650&q=80",
+        image: "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcTt_UhM25TvK3r2Tu045K3H8s6YQPeeN2N7iBKWuiU5TLMdjGsuf9Wdoi8vKR4N1hb13U9cUcUh1jXFJXKul5Z9cXABp_1BqUTJFYZC7Is&usqp=CAc",
         description: "High-resolution digital camera with 4K video recording.",
     },
     {
@@ -52,7 +52,7 @@ export const product = [
         name: "Women's Running Shoes",
         price: 2499,
         category: "Footwear",
-        image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1650&q=80",
+        image: "https://images.unsplash.com/photo-1620114884229-65d21f8c9423?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1935",
         description: "Lightweight running shoes with cushioning support.",
     },
     {
@@ -76,7 +76,7 @@ export const product = [
         name: "Mechanical Keyboard",
         price: 3999,
         category: "Electronics",
-        image: "https://images.unsplash.com/photo-1587829191301-dc798b83add3?auto=format&fit=crop&w=1650&q=80",
+        image: "https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?auto=format&fit=crop&w=1650&q=80",
         description: "RGB mechanical keyboard for gaming and typing.",
     },
     {
@@ -92,7 +92,7 @@ export const product = [
         name: "4K Monitor",
         price: 24999,
         category: "Electronics",
-        image: "https://images.unsplash.com/photo-1593642632759-e88eed0e4e90?auto=format&fit=crop&w=1650&q=80",
+        image: "https://m.media-amazon.com/images/I/71GRpZb6+vL._AC_UF1000,1000_QL80_.jpg",
         description: "27-inch 4K ultra HD monitor for professional work.",
     },
     {
@@ -260,7 +260,7 @@ export const product = [
         name: "Microwave",
         price: 5999,
         category: "Kitchen",
-        image: "https://images.unsplash.com/photo-1584622614875-2f938757f60e?auto=format&fit=crop&w=1650&q=80",
+        image: "https://images.unsplash.com/photo-1565357253897-79d691886a73?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
         description: "Digital microwave with sensor cooking.",
     },
     {

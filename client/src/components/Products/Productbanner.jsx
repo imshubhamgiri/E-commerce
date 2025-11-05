@@ -9,9 +9,12 @@ const Productbanner= (newdata) => {
         <div className='relative w-full h-full flex items-center justify-center bg-linear-to-r from-purple-900 via-black to-black overflow-hidden'>
             <div className="flex flex-col md:flex-row h-full">
               {/* Text and CTA Section (Left) */}
-              <div className="flex-1 p-6 sm:p-10 lg:p-16 flex flex-col justify-center text-white z-10">
-                <h2 className="text-xl flex gap-3 sm:text-2xl md:text-3xl lg:text-5xl shadow-[0_0_2px_#fff,inset_0_0_2px_#fff,0_0_5px_#08f,0_0_15px_#08f,0_0_30px_#08f]
-                 transition-all font-extrabold mb-2 leading-tight">
+              <div className="flex-1 gap-4 p-6 sm:p-10 lg:p-16 flex flex-col justify-center text-white z-10">
+                <h2 className="text-xl flex gap-3 sm:text-2xl md:text-3xl lg:text-5xl transition-all font-extrabold mb-2"
+                  style={{
+                    textShadow: '0 6px 20px rgba(124,58,237,0.28), 0 2px 6px rgba(99,102,241,0.18)',
+                    WebkitTextStroke: '0.2px rgba(0,0,0,0.12)'
+                  }}>
                  <img width={46} src="/apple.png" alt=""  className='invert-100' /> Iphone 17 Series
                 </h2>
                 <p className="text-xl sm:text-5xl md:text-xl lg:text-xl font-bold mb-6 sm:mb-8 leading-none">
