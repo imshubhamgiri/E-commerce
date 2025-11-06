@@ -3,6 +3,7 @@ export const product = [
         id: 1,
         name: "Wireless Headphones",
         price: 2999,
+        originalPrice: 3999,
         category: "Electronics",
         image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1650&q=80",
         description: "High-quality wireless headphones with noise cancellation.",

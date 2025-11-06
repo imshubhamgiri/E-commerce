@@ -63,7 +63,7 @@ const Product = () => {
               <img src={product.image} alt={product.name} className='w-full h-48 object-cover mb-2' />
               <h3 className='text-lg font-semibold'>{product.name}</h3>
               <p className='text-gray-600'>{product.description}</p>
-              <p className='text-xl font-bold'>${product.price / 100}</p>
+              <p className='text-xl font-bold'>₹{product.price } {product.originalPrice && <span className='line-through text-gray-500'>₹{product.originalPrice}</span>}</p>
             </Link>
           </div>
         ))}

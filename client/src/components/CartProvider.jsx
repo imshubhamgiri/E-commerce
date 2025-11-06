@@ -72,7 +72,7 @@ const CartProvider = ({ cartItems }) => {
             ${totalPrice}
           </p>
         </div>
-        <Link to={'/checkout'} className='' > <button className='px-4 py-2 cursor-pointer bg-green-500 text-white rounded'>
+        <Link to={'/cart/checkout'} className='' > <button className='px-4 py-2 cursor-pointer bg-green-500 text-white rounded'>
           Proceed to Checkout </button></Link>
       </div>
     </div>

@@ -48,7 +48,7 @@ console.log(Form)
             placeholder='Password'
           />
           <div className='flex justify-between mt-3 items-center'>
-          <button  className='bg-orange-400 w-fit text-white  px-7 py-2'>
+          <button  className='bg-orange-400 w-fit text-white  disabled:bg-gray-300 px-7 py-2' disabled={!(Form.credential && Form.password)}>
             Login
           </button>
           <p className='font-extralight text-red-400'>Forgot password?</p>

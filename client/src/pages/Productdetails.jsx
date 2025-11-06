@@ -2,7 +2,7 @@ import React, { use, useEffect, useState } from 'react'
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { product } from '../data/product';
 import { ShoppingCart, Heart, Truck, RotateCcw } from 'lucide-react';
-import { useCart } from '../context/CartContext.jsx';
+import { useCart } from '../Context/CartContext.jsx';
   import { ToastContainer, toast } from 'react-toastify';
 
 const Productdetails = () => {

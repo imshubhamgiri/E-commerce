@@ -11,6 +11,8 @@ import Cart from './pages/Cart'
 import Notfound from './pages/Notfound'
 import About from "./pages/About.jsx"
 import { CartStateProvider } from "./Context/CartContext.jsx";
+import Checkout from "./pages/Checkout.jsx";
+import UserProfile from "./pages/UserProfile.jsx";
 
 function App() {
   return (
@@ -28,6 +30,8 @@ function App() {
             <Route path="/product/:id" element={<Productdetails />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="*" element={<Notfound />} />
+            <Route path="cart/checkout" element={<Checkout />} />
+            <Route path="user/profile" element={<UserProfile />} />
           </Routes>
         </main>
 

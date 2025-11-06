@@ -1,4 +1,4 @@
-import { Heart, ShoppingCart, Search } from 'lucide-react'
+import { Heart, ShoppingCart, Search, User } from 'lucide-react'
 import { Link, NavLink } from 'react-router-dom'
 import React from 'react'
 import { useCart } from '../Context/CartContext.jsx';
@@ -76,6 +76,8 @@ const Navbar2 = () => {
                        {cartItems.length}
                     </span>
                 )}
+                </Link>
+                <Link to="/user/profile" className='cursor-pointer relative'><User size={18} />
                 </Link>
             </div>
         </div>
