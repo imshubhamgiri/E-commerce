@@ -61,7 +61,7 @@ const Timestamp = () => {
     
     // 4. Minimal Render Output
     return (
-        <div className="text-sm font-mono px-3 text-gray-800   border-gray-300 rounded-lg bg-white shadow-sm">
+        <div className="text-sm font-mono md:px-3 text-gray-800   border-gray-300 rounded-lg bg-white shadow-sm">
             {isFinished ? (
                 <span className="text-red-600 font-bold">Countdown Complete!</span>
             ) : (

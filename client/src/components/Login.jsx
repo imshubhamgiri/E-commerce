@@ -15,8 +15,8 @@ console.log(Form)
 
 
   return (
-    <div className='grid grid-cols-2 min-h-[70vh] my-10'>
-      <div className='right h-full overflow-hidden'>
+    <div className='md:grid md:grid-cols-2 md:min-h-[70vh] my-10'>
+      <div className='right hidden md:block h-full overflow-hidden'>
         <img 
           src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bG9naW58ZW58MHx8MHx8fDA%3D&w=1000&q=80" 
           alt="login image" 
@@ -24,7 +24,7 @@ console.log(Form)
         />
       </div>
       <div className='flex items-center justify-center w-full '>
-        <div className='flex flex-col w-1/2 items-start'>
+        <div className='flex flex-col md:w-1/2 items-start'>
             <div className='mb-8'>
         <h2 className='text-3xl font-semibold mb-2'>Log in to Exclusive</h2>
         <p className='font-light'>Access to premium content awaits you.</p>     

@@ -7,11 +7,12 @@ const Navbar2 = () => {
   const { cartItems } = useCart();
 
   return (
-    <div className='px-12 pt-8 pb-4 border-b'>
-        <div className='flex  justify-around items-center'>
-            <div>
+    <div className='lg:px-12 pt-8 pb-4 border-b'>
+        <div className='flex gap-4 flex-col md:flex-row justify-between items-center'>
+            <div className=''>
             <h2 className='text-3xl font-medium '>Exclusive</h2>
             </div>
+            <div></div>
             <div >
                 <ul className='flex gap-10'>
                     <li>

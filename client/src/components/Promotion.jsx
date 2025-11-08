@@ -19,16 +19,16 @@ const Promotion = () => {
     
   return (
     <>
-    <div className='top bg-black flex justify-center  w-full sticky top-0 z-50 px-5 py-2'>
+    <div className='top bg-black flex justify-center  w-full sticky top-0 z-50 md:px-5 py-2'>
       <div className='main w-full flex justify-center'>
-        <p className='text-stone-100'>
+        <p className='text-stone-100 font-thin md:text-lg text-sm'>
             Hallowin sale For up to 50% off! Use Code "HALLOWIN50"
             <NavLink to="/product" className='underline ml-2 transition-transform inline-block font-semibold hover:scale-110 text-white'>
               Shop Now
             </NavLink>
         </p>
       </div>
-      <div className='relative mr-14'>
+      <div className='relative mr:5 md:mr-14'>
         <button  
          onBlur={handleBlur}
          onClick={()=> seteToH(!eToH)}
@@ -38,7 +38,7 @@ const Promotion = () => {
         </button>
             {eToH && (
               <div className='absolute top-8 right-0 bg-white text-black rounded-md shadow-md z-10'>
-                <ul>
+                <ul> 
                   <li className='px-4 py-2 hover:bg-gray-100 cursor-pointer' onClick={() => handleLanguageChange('English')}>English</li>
                   <li className='px-4 py-2 hover:bg-gray-100 cursor-pointer' onClick={() => handleLanguageChange('Hindi')}>Hindi</li>
                   <li className='px-4 py-2 hover:bg-gray-100 cursor-pointer' onClick={() => handleLanguageChange('Spanish')}>Spanish</li>

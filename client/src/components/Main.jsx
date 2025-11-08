@@ -12,14 +12,14 @@ const Main = () => {
   return (
     <>    
     <div className='no-scrollbar'>
-      <div className='flex h-[50vh] justify-center mb-25 overflow-hidden'>
+      <div className='flex md:h-[50vh] flex-col md:flex-row justify-center mb-25 overflow-hidden'>
         {/* Left Side Content of Hero section */}
-        <div className='p-2 pt-10  w-[30vw] border-r h-full flex flex-col '>
+        <div className='p-2 pt-10  md:w-[30vw] md:border-r h-full flex flex-col '>
           {/* <h1 className='text-2xl font-bold'>Welcome to Our Store</h1> */}
           {/* <p className='mt-4'>Discover our latest products and exclusive offers.</p> */}
           {/* Prodcut categories */}
-          <div className='flex justify-end gap-4 mb-6'>
-            <ul className='w-1/2 flex flex-col gap-4 text-left'>
+          <div className='flex  md:justify-end gap-4 mb-6'>
+            <ul className='1.5xl:w-1/2 flex flex-col gap-4 text-left'>
               <li className='flex  justify-between items-center'>Women's Fashion <span><ChevronRight size={15} /></span></li>
               <li className='flex  justify-between items-center'>Men's Fashion <span><ChevronRight size={15} /></span></li>
               <li className='flex  justify-between items-center'>Gaming </li>
@@ -35,18 +35,18 @@ const Main = () => {
 
 
         {/* Right Side Content of Hero section */}
-        <div className='w-full flex pt-10 pr-30 px-10'>
+        <div className='w-full flex pt-10 md:pr-30 md:px-10'>
             <Productbanner data= {data}/>
         </div>
         {/* Right side Ends */}
      </div>
 
-        <section className="first my-12 ml-20 flex flex-col gap-5">
+        <section className="first my-12 md:ml-20 flex flex-col gap-5">
           <div>
             <h3 className="text-2xl flex gap-1 font-semibold text-gray-900 mb-1"><span className='bg-black rounded-s-2xl'>🔥</span>Today's Exclusive Deals</h3>
             </div>
-             <div className=' pb-2 mr-20 flex justify-between items-center'>
-                <div className='flex items-center gap-10'>
+             <div className=' pb-2 md:mr-20 flex overflow-hidden md:justify-between items-center'>
+                <div className='flex items-center md:gap-10'>
                     <h2 className="text-3xl font-bold text-gray-800">Flash Sales</h2>
                    {/* add timestamps or countdowns */}
                     <div className="">
@@ -89,7 +89,7 @@ const Main = () => {
         </section>
 
 
-        <section className='mx-20 flex flex-col gap-5 border-b pb-20 mb-20'>
+        <section className='md:mx-20 flex flex-col gap-5 border-b border-gray-800 pb-20 mb-20'>
           <div>
             <h3 className="text-xl flex gap-1 font-semibold text-gray-900 mb-1"><span className='bg-black rounded-s-2xl'>🛍️</span>Category</h3>
           </div>
@@ -104,7 +104,7 @@ const Main = () => {
              </div>
 
              {/* Category Items */}
-            <div className="flex py-3 w-full overflow-x-auto gap-4 flex-nowrap no-scrollbar">
+            <div className="grid grid-cols-2 md:flex py-3 w-full px-2 md:overflow-x-auto gap-4 flex-nowrap no-scrollbar">
                 {[
                   { name: 'laptop', slug: 'electronics' , icon: <LaptopMinimalCheck strokeWidth={0.5} size={70} />},
                   { name: "Smartphones", slug: 'womens-fashion', icon: <Smartphone strokeWidth={0.5} size={70} /> },
@@ -117,7 +117,7 @@ const Main = () => {
                     key={i}
                     to={`/category/${cat.slug}`}
                     className={({ isActive }) =>
-                      `p-4 rounded-lg shadow-md hover:shadow-xl hover:bg-purple-50 text-center hover:scale-105 transition duration-300 min-w-[210px] shrink-0 ${
+                      `p-4 rounded-lg shadow-md hover:shadow-xl hover:bg-purple-50 text-center hover:scale-105 transition duration-300   md:min-w-[180px] shrink-0 ${
                         isActive ? 'bg-purple-100' : 'bg-white'
                       }`
                     }
@@ -131,13 +131,13 @@ const Main = () => {
             </div>
         </section>
 
-       <section className="third w-100vw overflow-x-hidden my-12 ml-20 flex flex-col gap-5">
+       <section className="third w-100vw overflow-x-hidden my-12 md:ml-20 flex flex-col gap-5">
           <div>
             <h3 className="text-2xl flex gap-1 font-semibold text-gray-900 mb-1"><span className='bg-black rounded-s-2xl'>❕</span>This Month</h3>
             </div>
-             <div className=' pb-2 mr-20 flex justify-between items-center'>
+             <div className=' pb-2 px-2 md:mr-20 flex justify-between items-center'>
                 <div className='flex items-center gap-10'>
-                    <h2 className="text-3xl font-bold text-gray-800">Best Selling Products</h2>
+                    <h2 className="text-3xl md:font-bold text-gray-800">Best Selling Products</h2>
                 </div>
                 {/* <Link to="/flashsales" className="flex items-center text-red-600 font-medium hover:underline hover:scale-105 transition-transform">
                   See All Deals <ArrowLeft className="w-4 h-4 ml-1 rotate-180" />
@@ -170,7 +170,7 @@ const Main = () => {
             </div>
         </section>
 
-        <div className='grid h-86 grid-cols-2 p-13 bg-black mx-40 mb-20'>
+        <div className='hidden md:grid h-86 grid-cols-2 p-13 bg-black mx-40 mb-20'>
            <div className='flex flex-col gap-8 items-start'>
              <button className='text-green-400 font-semibold text-md'>
               Categories
