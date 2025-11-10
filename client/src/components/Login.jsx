@@ -1,17 +1,40 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react'
-const Login = () => {
+import { useNavigate } from 'react-router-dom'
+const Login = ({onloginsuccess = null}) => {
+  const navigate = useNavigate()
 const [Form, setForm] = useState({credential:'', password:""})
 const data = (e) => {
 setForm({ ...Form, [e.target.name]: e.target.value })
 }
 const handlesSubmit =() => {
+  // API call to login user
+  fetch('/api/login', {
+  method: 'POST',
+  headers: {
+  'Content-Type': 'application/json',
+  },
+  body: JSON.stringify(Form),
+  })
+  .then((response) => response.json())
+  .then((data) => {
+  if (data.token) {
+  // Save token and user info
+  localStorage.setItem('token', data.token);
+  localStorage.setItem('user', JSON.stringify(data.user));
+  }
+  })
+  .catch((error) => {
+  console.error('Error logging in:', error);
+  });
+
   setForm({credential:'', password:""});
 }
 
 useEffect(() => {
 console.log(Form)
 }, [Form])
+
 
 
   return (
