@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-
-const Login = ({ onLoginSuccess = null }) => {
+import { useNavigate } from 'react-router-dom'
+//check about valid email
+// const isValidEmail = (form.email) = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(form.email);
+const Login = ({ onSignUpSuccess = null }) => {
   const navigate = useNavigate()
-  const [form, setForm] = useState({ credential: '', password: '' })
+  const [form, setForm] = useState({name:'' , credential: '', password: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -17,13 +18,14 @@ const Login = ({ onLoginSuccess = null }) => {
     setError('')
 
     try {
-      const response = await fetch('http://localhost:5000/api/users/login', {
+      const response = await fetch('http://localhost:5000/api/users/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: form.credential,  // Map credential to email
+          name:form.name.trim(),
+          email: form.credential.trim().toLowerCase(),  // Map credential to email
           password: form.password
         }),
       })
@@ -40,8 +42,8 @@ const Login = ({ onLoginSuccess = null }) => {
         localStorage.setItem('user', JSON.stringify(data.user))
       }
 
-      if (onLoginSuccess) {
-        onLoginSuccess(data.user)
+      if (onSignUpSuccess) {
+        onSignUpSuccess(data.user)
       }
       
       navigate('/product')
@@ -67,10 +69,18 @@ const Login = ({ onLoginSuccess = null }) => {
       <div className='flex items-center justify-center w-full'>
         <div className='flex flex-col md:w-1/2 items-start'>
           <div className='mb-8'>
-            <h2 className='text-3xl font-semibold mb-2'>Log in to Exclusive</h2>
+            <h2 className='text-3xl font-semibold mb-2'>Sign in to Exclusive</h2>
             <p className='font-light'>Access to premium content awaits you.</p>     
           </div>
           <form className='flex flex-col my-4 gap-4 w-full' onSubmit={handleSubmit}>
+            <input
+              name='name'
+              type="text"
+              value={form.name}
+              onChange={handleChange}
+              className='border-solid border-gray-700 border-b-2 outline-none rounded-sm px-2 py-1'
+              placeholder='Enter Your Name'
+            />
             <input
               name='credential'
               type="email"
@@ -88,20 +98,18 @@ const Login = ({ onLoginSuccess = null }) => {
               placeholder='Password'
             />
             {error && <p className='text-red-500 text-sm'>{error}</p>}
-            <div className='flex justify-between mt-3 items-center'>
+            <div className='flex w-full mt-3 items-center'>
               <button 
                 type='submit'
-                className='bg-orange-400 w-fit text-white disabled:bg-gray-300 px-7 py-2' 
-                disabled={!(form.credential && form.password) || loading}
+                className='bg-orange-400 w-full text-white disabled:bg-gray-300 px-7 py-2' 
+                disabled={!(form.name && form.credential && form.password) || loading}
               >
-                {loading ? 'Loading...' : 'Login'}
+                {loading ? 'Loading...' : 'SignUp'}
               </button>
-              <p className='font-extralight text-red-400'>Forgot password?</p>
+             
             </div>
           </form>
-        <div className='text-md w-full shadow-md font-semibold flex justify-between p-2 rounded-md text-gray-500'>
-            <p>Doesn't have a Account?</p> <Link to={'/Registration'} className='text-blue-400'>Create an account</Link>
-        </div>
+
         </div>
       </div>
     </div>

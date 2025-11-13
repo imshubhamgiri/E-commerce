@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
 import Home from "./pages/Home.jsx"
 import Loginpage from "./pages/Loginpage.jsx"
-import { Route, Routes } from "react-router-dom"
+import {Navigate, useLocation , Route, Routes } from "react-router-dom"
 import Promotion from './components/Promotion'
 import Navbar2 from './components/Navbar2'
 import Footer from './components/layout/Footer'
@@ -12,7 +12,14 @@ import Notfound from './pages/Notfound'
 import About from "./pages/About.jsx"
 import { CartStateProvider } from "./Context/CartContext.jsx";
 import Checkout from "./pages/Checkout.jsx";
+import Registration from './components/Registration.jsx'
 import UserProfile from "./pages/UserProfile.jsx";
+
+function RequireAuth({ children }) {
+  const IsLoggedIn = Boolean(localStorage.getItem("token"));
+  const location = useLocation();
+  return IsLoggedIn ? children : <Navigate to="/login" state={{ from: location }} replace />;
+}
 
 function App() {
   return (
@@ -31,7 +38,11 @@ function App() {
             <Route path="/cart" element={<Cart />} />
             <Route path="*" element={<Notfound />} />
             <Route path="cart/checkout" element={<Checkout />} />
-            <Route path="user/profile" element={<UserProfile />} />
+            <Route path="user/profile" element={
+              <RequireAuth>
+              <UserProfile />
+              </RequireAuth>} />
+            <Route path="/registration" element={<Registration/>}/>
           </Routes>
         </main>
 

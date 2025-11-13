@@ -1,10 +1,26 @@
 import React from 'react'
+import { useEffect } from 'react'
+import { useState } from 'react'
 
 const UserProfile = () => {
+  const [Username, setUsername] = useState('')
+  const [IsLoggedIn, setIsLoggedIn] = useState(false)
+    useEffect(() => {
+     const user = JSON.parse(localStorage.getItem('user'))
+     if(user){
+      setIsLoggedIn(true)
+     }
+    }, [])
+    
+    useEffect(() => {
+      const {name}   =  JSON.parse(localStorage.getItem('user'))
+      setUsername(name)
+    }, [IsLoggedIn])
+    
   return (
     <div className='min-h-screen bg-linear-to-br from-white to-slate-300 py-12 px-4'>
       <div className='max-w-7xl mx-auto'>
-        <h2 className='font-bold text-4xl text-center mb-12 text-slate-800'>Welcome to Your Profile</h2>
+        <h2 className='font-bold text-4xl text-center mb-12 text-slate-800'>Welcome <p className=' inline font-serif font-light'>{Username}</p></h2>
         
         <div className='flex flex-col lg:flex-row gap-8'>
           {/* Left Sidebar */}
