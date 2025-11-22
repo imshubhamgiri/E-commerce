@@ -14,6 +14,7 @@ import { CartStateProvider } from "./Context/CartContext.jsx";
 import Checkout from "./pages/Checkout.jsx";
 import Registration from './components/Registration.jsx'
 import UserProfile from "./pages/UserProfile.jsx";
+import Success from "./pages/Success.jsx"
 
 function RequireAuth({ children }) {
   const IsLoggedIn = Boolean(localStorage.getItem("token"));
@@ -43,6 +44,7 @@ function App() {
               <UserProfile />
               </RequireAuth>} />
             <Route path="/registration" element={<Registration/>}/>
+            <Route path="/success" element={<Success/>}/>
           </Routes>
         </main>
 

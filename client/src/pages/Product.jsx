@@ -1,21 +1,43 @@
 import React, { useEffect } from 'react'
-import { product } from "../data/product.js";
+// import { product } from "../data/product.js";
 import { Link } from "react-router-dom";
 import { ArrowDown, ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
-
+import { fetchProducts } from '../api/Productservice.jsx';
 const Product = () => {
+  const [dbProducts, setDbProducts] = useState([]) // must be an array
   const [catdown, setcatdown] = useState(false)
-  const [filteredProducts, setFilteredProducts] = useState(product)
+  const [filteredProducts, setFilteredProducts] = useState([])
   const [SelectedCategory, setCategory] = useState('All')
-
-  // Helper function to get a unique list of all categories
-  const categories = ['All', ...new Set(product.map(p => p.category))];
+  
 
   useEffect(() => {
-    const filtered = SelectedCategory === 'All' ? product : product.filter(p => p.category === SelectedCategory);
+    const getProducts = async () => {
+      try {
+        const products = await fetchProducts();
+        // normalize API shape: if API returns { products: [...] } or { data: [...] }
+        const list = Array.isArray(products)
+          ? products
+          : [];
+        setDbProducts(list);
+        const id = list.map(p => p._id);
+        console.log("Fetched products:", id);
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      }
+    };
+
+    getProducts();
+  }, []);
+
+  // Helper function to get a unique list of all categories
+  const categories = ['All', ...new Set((Array.isArray(dbProducts) ? dbProducts : []).map(p => p.category))]
+
+  useEffect(() => {
+    const source = Array.isArray(dbProducts) ? dbProducts : [];
+    const filtered = SelectedCategory === 'All' ? source : source.filter(p => p.category === SelectedCategory);
     setFilteredProducts(filtered);
-  }, [SelectedCategory]);
+  }, [SelectedCategory, dbProducts]);
 
   const setSelectedCategory = (category) => {
     setCategory(category);
@@ -58,9 +80,9 @@ const Product = () => {
       </div>
       <div className='grid grid-cols-2 lg:grid-cols-4 gap-4'>
         {filteredProducts.map(product => (
-          <div key={product.id} className='border p-4'>
-            <Link to={`/product/${product.id}`}>
-              <img src={product.image} alt={product.name} className='w-full h-36 md:h-48 object-cover mb-2' />
+          <div key={product._id} className='border p-4'>
+            <Link to={`/product/${product._id}`}>
+              <img src={product.imageUrl} alt={product.name} className='w-full h-36 md:h-48 object-cover mb-2' />
               <h3 className='text-lg font-semibold'>{product.name}</h3>
               <p className='text-gray-600 hidden md:block'>{product.description}</p>
               <p className='text-xl font-bold'>₹{product.price } {product.originalPrice && <span className='line-through text-gray-500'>₹{product.originalPrice}</span>}</p>

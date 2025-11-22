@@ -5,7 +5,7 @@ import dotenv from 'dotenv'
 import { connectDB } from './config/db.js'
 import userRouter from './routes/userRoutes.js'
 import productRouter from './routes/productRoutes.js'
-// import orderRouter from './routes/orderRoutes.js'
+import orderRouter from './routes/orderRoutes.js'
 dotenv.config();
 
 
@@ -27,7 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use('/api/users', userRouter);
 app.use('/api/products', productRouter);
-// app.use('/api/users', orderRouter);
+app.use('/api/orders', orderRouter);
 
 app.get('/', (req, res) => {
   res.send('Hello World!');

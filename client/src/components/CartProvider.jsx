@@ -42,10 +42,10 @@ const CartProvider = ({ cartItems }) => {
   return (
     <div className='p-8 w-full max-w-3xl'>
       {cartItems.map(item => (
-        <div key={item.id} className='border-b grid grid-cols-2 border-gray-200 py-4'>
+        <div key={item._id} className='border-b grid grid-cols-2 border-gray-200 py-4'>
           <div>
             <Link to={`/product/${item.id}`}>
-              <img src={item.image} alt={item.name} className='w-32 h-32 object-cover' />
+              <img src={item.imageUrl} alt={item.name} className='w-32 h-32 object-cover' />
             </Link>
           </div>
           <div>

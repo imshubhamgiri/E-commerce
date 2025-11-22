@@ -1,10 +1,27 @@
 import { Heart, ShoppingCart, Search, User } from 'lucide-react'
-import { Link, NavLink } from 'react-router-dom'
-import React from 'react'
+import { Link, NavLink, useLocation } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
 import { useCart } from '../Context/CartContext.jsx';
-
+  
 const Navbar2 = () => {
   const { cartItems } = useCart();
+  const [IsLoggedIn, setIsLoggedIn] = useState(false);
+  const location = useLocation();
+  
+  // Re-check token on mount and whenever the route changes (e.g. after login redirect)
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    // setIsLoggedIn(!!token);
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, [location]);
+  
+const logout = () => {
+  localStorage.removeItem('token')
+  localStorage.removeItem('user')
+  setIsLoggedIn(false)
+}
 
   return (
     <div className='lg:px-12 pt-8 pb-4 border-b'>
@@ -46,7 +63,8 @@ const Navbar2 = () => {
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink 
+                        {IsLoggedIn && <button className='cursor-pointer' onClick={logout} >Log Out</button>}
+                       {!IsLoggedIn && <NavLink 
                             to="/login" 
                             className={({ isActive }) => 
                                 isActive ? 'underline ' : ''
@@ -54,6 +72,7 @@ const Navbar2 = () => {
                         >
                             SignUp
                         </NavLink>
+                        }
                     </li>
                 </ul>
             </div>

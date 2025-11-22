@@ -1,60 +1,59 @@
-import React, { use, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { product } from '../data/product';
 import { ShoppingCart, Heart, Truck, RotateCcw } from 'lucide-react';
 import { useCart } from '../Context/CartContext.jsx';
-  import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
+import { fetchProductById } from '../api/Productservice.jsx';
 
 const Productdetails = () => {
   const { cartItems, addToCart } = useCart();
 
-  const { id } = useParams();
+  // accept either param name (id or _id) so route name doesn't break the component
+  const params = useParams();
+  const productId = params.id || params._id;
   const navigate = useNavigate();
-  const productDetails = product.find(item => item.id === parseInt(id));
-  const [selectedImage, setSelectedImage] = useState(0);
-
-  const formatPrice = (cents) => {
-    if (typeof cents !== 'number') return '-';
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100);
-  }
   
-  // useEffect(() => {
-  //   const storedCart = localStorage.getItem('cartItems');
-  //   if (storedCart) {
-  //     setCartItems(JSON.parse(storedCart));
-  //   }
-  // }, []);
-
-  // const handleAddToCart = () => {
-  //   if(!productDetails) return;
-  //   // Check if item already exists in cart
-  //   const itemExists = cartItems.find(item => item.id === productDetails.id);
-    
-  //   if(itemExists) {
-  //     toast.info(`${productDetails.name} is already in your cart!`);
-  //     return;
-  //   }
-  // const updatedCart = [...cartItems, productDetails];
-  // setCartItems(updatedCart);
-  // localStorage.setItem('cartItems', JSON.stringify(updatedCart)); 
-    
-  //   toast.success(`${productDetails.name} added to cart!`);             
-  // }
+  const [productDetails, setProductDetails] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(0);
+  const [cartItemsState, setCartItems] = useState(cartItems || []);
 
   useEffect(() => {
+    const fetchProduct = async () => {
+      if (!productId) return;
+      try {
+        const product = await fetchProductById(productId);
+        // normalize shape if API returns { product: {...} } or { data: {...} }
+        const p = product?.product || product?.data || product;
+        setProductDetails(p);
+      } catch (error) {
+        console.error("Failed to fetch product details:", error);
+      }
+    };
+
+    fetchProduct();
+  }, [productId]);
+
+  // format price the same way as Product page (use actual value, don't divide by 100)
+  const formatPrice = (value) => {
+    if (typeof value !== 'number') return '-';
+    return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(value);
+  }
+  
+  useEffect(() => {
     console.log('Cart updated:', cartItems);
-  }, [cartItems, productDetails.name]);
+  }, [cartItems, productDetails?.name]);
 
   const handleBuyNow = () => {
-    // placeholder: send user to checkout with product
-    navigate('/checkout', { state: { productId: productDetails?.id, qty: 1 } });
+    // use _id or id depending on API shape
+    const idForCheckout = productDetails?._id || productDetails?.id;
+    navigate('/cart/checkout', { state: { productId: idForCheckout, qty: 1 } });
   }
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [id]);
+  }, [productId]);
 
-    if (!productDetails) {
+  if (!productDetails) {
     return (
       <div className="p-8 max-w-4xl mx-auto">
         <Link to="/products" className="text-sm text-sky-600 hover:underline">← Back to products</Link>
@@ -63,10 +62,9 @@ const Productdetails = () => {
     )
   }
 
-  // ensure images array exists
-  const images = Array.isArray(productDetails.image) && productDetails.image.length
-    ? productDetails.image
-    : [productDetails.image];
+  const images = Array.isArray(productDetails.imageUrl) && productDetails.imageUrl.length
+    ? productDetails.imageUrl
+    : [productDetails.imageUrl];
 
   return (
     <>

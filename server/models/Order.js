@@ -5,12 +5,19 @@ const orderSchema = new mongoose.Schema({
   products: [
     {
       productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
-      qty: Number,
+      qty: Number, 
     },
   ],
   totalAmount: Number,
-  address: String,
+  address: {  // ✅ Changed to single object
+    name: String,
+    email: String,
+    phone: String,
+    address: String,
+  },
   status: { type: String, default: "Pending" },
-}, { timestamps: true });
+},
+ { timestamps: true }
+);
 
 export default mongoose.model("Order", orderSchema);
