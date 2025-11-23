@@ -1,6 +1,7 @@
 import React from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const UserProfile = () => {
   const [Username, setUsername] = useState('')
@@ -28,9 +29,9 @@ const UserProfile = () => {
             <div className='bg-white shadow-md rounded-lg p-8 sticky top-8'>
               <h3 className='font-bold text-2xl text-slate-800 mb-6'>Manage My Account</h3>
               <ul className='flex flex-col gap-3'>
-                <li className='p-3 rounded-lg hover:bg-blue-50 text-blue-600 font-semibold cursor-pointer transition border-l-4 border-blue-600 pl-4'>
-                  View Order History
-                </li>
+              <Link to="/orders" ><li className='p-3 rounded-lg hover:bg-blue-50 text-blue-600 font-semibold cursor-pointer transition border-l-4 border-blue-600 pl-4'>
+                  View Order History 
+                </li></Link>
                 <li className='p-3 rounded-lg hover:bg-blue-50 text-blue-600 font-semibold cursor-pointer transition border-l-4 border-transparent pl-4 hover:border-blue-600'>
                   Change Password
                 </li>
