@@ -1,5 +1,5 @@
 import { useCart } from "../Context/CartContext";
-import { useState, useEffect } from "react";
+import { useState, useEffect , useCallback } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
@@ -14,6 +14,18 @@ const Checkout = () => {
   });
   const [loading, setLoading] = useState(false);
 
+  const token = localStorage.getItem('token') || localStorage.getItem('authToken');
+  if (!token) {
+    toast.error("Please login first");
+    navigate('/login');
+    return;
+  }
+  const getauthHeader = useCallback(() => {
+    const token = localStorage.getItem('token') || localStorage.getItem('authToken') || null;
+    return token ? { 'Authorization': `Bearer ${token}` } : {};
+  }, [token]);
+
+
   const API_URL = 'http://localhost:5000/api';
 
   const isFormValid = () => {
@@ -21,7 +33,7 @@ const Checkout = () => {
   };
 
   const user = localStorage.getItem('user')
-  const { id } = user ? JSON.parse(user) : {};
+  const { id } = user ? JSON.parse(user) : {}; //was using it earlier to pass user?.id
 
   const shippingData = {
     name: userInfo.name,
@@ -58,15 +70,21 @@ const Checkout = () => {
       return;
     }
 
+    // DEBUG: Check what's in localStorage
+    console.log('All localStorage keys:', Object.keys(localStorage));
+    console.log('token:', localStorage.getItem('token'));
+    console.log('authToken:', localStorage.getItem('authToken'));
+    console.log('Auth header:', getauthHeader());
+
+
     setLoading(true);
 
     try {
       // Step 1: Create order in MongoDB
       const orderResponse = await fetch(`${API_URL}/orders/`, {
         method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        headers: { 'content-type': 'application/json' , ...getauthHeader()},
         body: JSON.stringify({
-          userId: id,
           shippingAddress: shippingData,
           items: cartItems.map(item => ({
             productId: item._id,
@@ -76,8 +94,12 @@ const Checkout = () => {
         })
       });
 
+      console.log('Response status:', orderResponse.status);
+
       if (!orderResponse.ok) {
-        throw new Error('Failed to create order');
+        const errorData = await orderResponse.json();
+        console.log('Error details:', errorData);
+        throw new Error(errorData.message || 'Failed to create order');
       }
 
       const orderData = await orderResponse.json();

@@ -2,8 +2,13 @@ import Product from "../models/Products.js";
 import Order from "../models/Order.js";
 
 export async function createOrder(req, res) {
+    if(!req.user || !req.user.id) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
     try {
-        const { userId, items, totalAmount, shippingAddress } = req.body;
+        const { items, totalAmount, shippingAddress } = req.body;
+        const userId = req.user.id;
+        console.log("Creating order for user:", userId);
 
         const newOrder = new Order({
             user: userId,

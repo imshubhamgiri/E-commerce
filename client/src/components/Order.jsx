@@ -1,16 +1,26 @@
-import React, { useState , useEffect } from 'react'
+import React, { useState , useEffect, useCallback } from 'react'
 import { fetchProductById } from '../api/Productservice';
 const Order = () => {
 const [Orders, setOrders] = useState([]);
 const [orderdetails, setorderdetails] = useState()
 const [loading, setLoading] = useState(true)
 
+const authHeaders = useCallback(() => {
+    const token = localStorage.getItem('token') || localStorage.getItem('authToken') || null;
+    return token ? { 'Authorization': `Bearer ${token}` } : {};
+  }, []);
+
 useEffect(() => {
     const fetchOrders = async () => {
         try {
             const user = localStorage.getItem('user')
             const {id} = user ? JSON.parse(user) : {};
-            const response = await fetch(`http://localhost:5000/api/orders/${id}`);
+
+        
+            
+            const response = await fetch(`http://localhost:5000/api/orders/${id}`, {
+              headers: authHeaders()
+            });
             const data = await response.json();
             setOrders(data);
             console.log("Fetched Orders:", data);

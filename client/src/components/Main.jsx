@@ -1,14 +1,38 @@
 import { ArrowLeft, ArrowRight, ChevronRight, Gamepad, Gamepad2, Handbag, Heart, Laptop, LaptopMinimalCheck, Phone, Shirt, Smartphone, Store, TestTube } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useState , useEffect } from 'react'
 import { Link, NavLink } from 'react-router-dom';
 import Productbanner from './Products/Productbanner';
 import Timestamp from './common/Timestamp';
 import { Button } from './ui/button';
-
+import { fetchProducts} from '../api/Productservice';
 
 const Main = () => {
  
   const [data, setdata] = useState([5])
+  const [dbproducts, setdbproducts] = useState([])
+  const [flashproducts, setflashproducts] = useState([])
+  const [loading, setloading] = useState(false)
+  const[Bestselling, setBestSelling] = useState([])
+ 
+  useEffect(() => {
+    const getproducts = async() => {
+      const products = await fetchProducts()
+      const list = Array.isArray(products) ? products : [];
+      setdbproducts(list)
+      console.log('db products:', list) // Log here, not dbproducts
+    } 
+    getproducts();
+  }, [])
+
+  useEffect(() => {
+    if (dbproducts.length > 0) { // Add safety check
+      // const filtered = dbproducts.filter(p => p.category === 'Books').slice(0,10);
+      setflashproducts(dbproducts.filter(p => p.category === 'Books').slice(0,10))
+      setBestSelling(dbproducts.filter(p => p.category === 'Automotive').slice(0,10))
+      // console.log('flash sales:', filtered)
+    }
+  }, [dbproducts]) // Add dbproducts as dependency
+
   return (
     <>    
     <div className='no-scrollbar'>
@@ -62,12 +86,14 @@ const Main = () => {
                 </div>
              </div>
             <div className="flex py-3 w-full overflow-x-auto gap-4 flex-nowrap no-scrollbar">  {/* keep scrolling, hide native scrollbar */}
-                {[...Array(10)].map((_, i) => (
+                {flashproducts.map((items, i) => (
                     <div 
                       key={i} 
                       className="relative bg-white p-4 rounded-lg shadow-md hover:shadow-xl transition duration-300 min-w-[200px] shrink-0 group"
                     >
-                        <div className="h-24 p-20 bg-red-100 rounded mb-3 flex items-center justify-center text-red-500 font-bold">Item {i+1}</div>
+                        <div className="h-24 w-50">
+                          <img src={items.imageUrl} className='object-cover h-full w-full' alt="" />
+                          </div>
 
                         {/* Add to cart button — hidden until hover */}
                         <button
@@ -76,8 +102,8 @@ const Main = () => {
                         >
                           Add to cart
                         </button>
-                        <p className="text-sm font-medium">Gaming Console / Monitor</p>
-                        <p className="text-lg font-bold text-stone-600 mt-1">$199.99</p>
+                        <p className="text-sm font-medium">{items.name}</p>
+                        <p className="text-lg font-bold text-stone-600 mt-1">₹{items.price}</p>
                     </div>
                 ))}
             </div>
@@ -146,14 +172,14 @@ const Main = () => {
                  <Button>View All Products</Button>
                 </div>
              </div>
-            <div className="flex py-3 w-fit overflow-x-auto   gap-8 flex-nowrap no-scrollbar">  {/* keep scrolling, hide native scrollbar */}
-                {[...Array(5)].map((_, i) => (
+            <div className="flex py-3 w-auto overflow-x-auto   gap-8 flex-nowrap no-scrollbar">  {/* keep scrolling, hide native scrollbar */}
+                {Bestselling.map((items, i) => (
                     <div 
                       key={i} 
                       className="relative bg-white p-4 rounded-lg shadow-md hover:shadow-xl transition duration-300 min-w-[200px] shrink-0 group"
                     >
 
-                        <div className="h-24 p-20 relative bg-red-100 rounded mb-3 flex items-center justify-center text-red-500 font-bold">Item {i+1} <span className='rounded-full bg-white absolute 
+                        <div className="h-28 w-55 relative"><img src={items.imageUrl} className='w-full h-full object-cover' alt="" /> <span className='rounded-full bg-white absolute 
                         top-2 shadow-md right-2 text-black p-1'><Heart size={15} className='' /></span></div>
 
                         {/* Add to cart button — hidden until hover */}
@@ -163,8 +189,8 @@ const Main = () => {
                         >
                           Add to cart
                         </button>
-                        <p className="text-sm font-medium">Gaming Console / Monitor</p>
-                        <p className="text-lg font-bold text-stone-600 mt-1">$199.99</p>
+                        <p className="text-sm font-medium">{items.name}</p>
+                        <p className="text-lg font-bold text-stone-600 mt-1">₹{items.price}</p>
                     </div>
                 ))}
             </div>
