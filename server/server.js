@@ -22,7 +22,7 @@ const app = express();
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
-  'e-commerce-three-beta-70.vercel.app' // 
+  'https://e-commerce-three-beta-70.vercel.app' // 
 ];
 
 app.use(cors({
