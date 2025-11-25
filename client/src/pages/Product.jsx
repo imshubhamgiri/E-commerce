@@ -9,10 +9,12 @@ const Product = () => {
   const [catdown, setcatdown] = useState(false)
   const [filteredProducts, setFilteredProducts] = useState([])
   const [SelectedCategory, setCategory] = useState('All')
+  const [loading, setloading] = useState(false)
   
 
   useEffect(() => {
     const getProducts = async () => {
+      setloading(true);
       try {
         const products = await fetchProducts();
         // normalize API shape: if API returns { products: [...] } or { data: [...] }
@@ -24,6 +26,8 @@ const Product = () => {
         console.log("Fetched products:", id);
       } catch (error) {
         console.error("Failed to fetch products:", error);
+      } finally {
+        setloading(false);
       }
     };
 
@@ -78,6 +82,12 @@ const Product = () => {
           </div>}
         </div>
       </div>
+      {loading && <div className="flex justify-center items-center ">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>}
+      {!loading && filteredProducts.length === 0 && (
+        <p className='text-gray-600'>No products found .</p>
+      )}
       <div className='grid grid-cols-2 lg:grid-cols-4 gap-4'>
         {filteredProducts.map(product => (
           <div key={product._id} className='border p-4'>

@@ -18,7 +18,7 @@ useEffect(() => {
 
         
             
-            const response = await fetch(`http://localhost:5000/api/orders/${id}`, {
+            const response = await fetch(`https://e-commerce-l5st.onrender.com/api/orders/${id}`, {
               headers: authHeaders()
             });
             const data = await response.json();
@@ -48,10 +48,12 @@ useEffect(() => {
         </div>
         <div className='flex flex-col items-center w-full  px-10 py-20 bg-amber-200'>
 
-        {loading && <div className="flex justify-center items-center min-h-screen">
+        {loading && <div className="flex justify-center items-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>}
-
+          {!loading && Orders.length === 0 && (
+            <p className='text-gray-600'>No orders found.</p>
+          )}
       
       {Orders.map(order => (
         <div key={order._id} className='border w-full mb-6 p-4 rounded-lg bg-white shadow-md'>

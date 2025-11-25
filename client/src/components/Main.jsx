@@ -19,7 +19,7 @@ const Main = () => {
       const products = await fetchProducts()
       const list = Array.isArray(products) ? products : [];
       setdbproducts(list)
-      console.log('db products:', list) // Log here, not dbproducts
+      // console.log('db products:', list) // Log here, not dbproducts
     } 
     getproducts();
   }, [])

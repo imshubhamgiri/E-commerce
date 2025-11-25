@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
+const isValidEmail = (email) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
+
 const Login = ({ onLoginSuccess = null }) => {
   const navigate = useNavigate()
   const [form, setForm] = useState({ credential: '', password: '' })
@@ -12,12 +14,17 @@ const Login = ({ onLoginSuccess = null }) => {
   }
 
   const handleSubmit = async (e) => {
+    if (!isValidEmail(form.credential)) {
+      setError('Please enter a valid email address.')
+      return
+    }
+
     e.preventDefault()
     setLoading(true)
     setError('')
 
     try {
-      const response = await fetch('http://localhost:5000/api/users/login', {
+      const response = await fetch('https://e-commerce-l5st.onrender.com/api/users/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

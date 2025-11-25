@@ -7,11 +7,10 @@ import { connectDB } from './config/db.js'
 import userRouter from './routes/userRoutes.js'
 import productRouter from './routes/productRoutes.js'
 import orderRouter from './routes/orderRoutes.js'
-import paymentRouter from './routes/Payment.js' // ✅ Import the payment router
+import paymentRouter from './routes/Payment.js'
 
 // Load environment variables
 dotenv.config();
-
 
 const app = express();
 
@@ -20,15 +19,32 @@ const app = express();
 //   key_secret: process.env.KEY_SECRET,
 // });
 
-// Middleware
-// app.use(cors({
-//   origin: process.env.CORS_ORIGIN,
-//   credentials: true
-// }));
+// ============ CORS Configuration ============
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'https://your-frontend-url.vercel.app' // Update this with your actual Vercel URL after deployment
+];
+
+app.use(cors({
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps, Postman, or curl)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
+// ============ End CORS Configuration ============
+
 // Connect to Database
 connectDB();
+
 // Middleware
-app.use(cors())
 app.use(bodyParser.json())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -37,14 +53,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/users', userRouter);
 app.use('/api/products', productRouter);
 app.use('/api/orders', orderRouter);
-app.use('/api/payments', paymentRouter); // ✅ Add this
+app.use('/api/payments', paymentRouter);
 
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.send('E-commerce API is running!');
   console.log('Root route accessed');
 });
 
-const PORT = 5000;
+// Use PORT from environment variable or default to 5000
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port http://localhost:${PORT}`);
