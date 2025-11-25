@@ -9,7 +9,6 @@ import productRouter from './routes/productRoutes.js'
 import orderRouter from './routes/orderRoutes.js'
 import paymentRouter from './routes/Payment.js'
 
-// Load environment variables
 dotenv.config();
 
 const app = express();
@@ -23,7 +22,7 @@ const app = express();
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
-  'https://your-frontend-url.vercel.app' // Update this with your actual Vercel URL after deployment
+  'e-commerce-three-beta-70.vercel.app' // 
 ];
 
 app.use(cors({
