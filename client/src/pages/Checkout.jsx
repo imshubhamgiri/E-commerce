@@ -26,7 +26,7 @@ const Checkout = () => {
   }, [token]);
 
 
-  const API_URL = 'http://localhost:5000/api';
+  const API_URL = 'https://e-commerce-l5st.onrender.com/api';
 
   const isFormValid = () => {
     return Object.values(userInfo).every(value => value.trim() !== '');
