@@ -9,7 +9,7 @@ const Product = () => {
   const [catdown, setcatdown] = useState(false)
   const [filteredProducts, setFilteredProducts] = useState([])
   const [SelectedCategory, setCategory] = useState('All')
-  const [loading, setloading] = useState(false)
+  const [loading, setloading] = useState(true)
   
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const Product = () => {
           : [];
         setDbProducts(list);
         const id = list.map(p => p._id);
-        console.log("Fetched products:", id);
+        // console.log("Fetched products:", id);
       } catch (error) {
         console.error("Failed to fetch products:", error);
       } finally {
@@ -65,15 +65,15 @@ const Product = () => {
               Category
               <span>{catdown ? <ChevronUp/> : <ChevronDown/>}</span>
             </button>
-          {catdown && <div className='absolute text-red-500 bg-opacity-100 border  -left-18  mt-2 py-4 px-2 w-48  shadow-lg z-10'>
-           <div className="category-filter-buttons w-full flex flex-col gap-2">
+          {catdown && <div className='absolute text-black bg-gray-200 h-30 overflow-x-scroll no-scrollbar -left-18  mt-2 py-4 px-2 w-48  z-10'>
+           <div className="category-filter-buttons  w-full flex flex-col gap-2">
       {categories.map(category => (
         <button
           key={category}
           // The click handler updates the state
           onClick={() => setSelectedCategory(category)}
           // Highlight the active button for better UX
-          className={SelectedCategory === category ? 'active' : ''}
+          className={`text-left w-full px-3 py-2 rounded hover:bg-gray-300 ${SelectedCategory === category ? 'bg-gray-400 font-bold' : ''}`}
         >
           {category.charAt(0).toUpperCase() + category.slice(1)} {/* Capitalize first letter */}
         </button>

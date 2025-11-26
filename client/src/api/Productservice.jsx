@@ -1,13 +1,12 @@
 import axios from "axios";
-
-const API_URL = "https://e-commerce-l5st.onrender.com/api/products";
+import API_URL from "../config/api";
 
 export const fetchProducts = async () => {
-  const { data } = await axios.get(API_URL);
+  const { data } = await axios.get(`${API_URL}/products`);
   return data;
 };
 
 export const fetchProductById = async (id) => {
-  const { data } = await axios.get(`${API_URL}/${id}`);
+  const { data } = await axios.get(`${API_URL}/products/${id}`);
   return data;
 };

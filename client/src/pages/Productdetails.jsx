@@ -39,9 +39,9 @@ const Productdetails = () => {
     return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(value);
   }
   
-  useEffect(() => {
-    console.log('Cart updated:', cartItems);
-  }, [cartItems, productDetails?.name]);
+  // useEffect(() => {
+  //   console.log('Cart updated:', cartItems);
+  // }, [cartItems, productDetails?.name]);
 
   const handleBuyNow = () => {
     // use _id or id depending on API shape

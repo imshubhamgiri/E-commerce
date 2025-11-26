@@ -32,7 +32,7 @@ const CartProvider = ({ cartItems }) => {
     // window.location.reload(); // Simple way to refresh the component to reflect changes
     setCartItems((prev) =>
       prev.map((item) =>
-        item.id === id ? { ...item, qty: newqty } : item
+        item._id === id ? { ...item, qty: newqty } : item
       )
     );
   }
@@ -55,12 +55,12 @@ const CartProvider = ({ cartItems }) => {
             <div className='mt-2 flex justify-between'>
               <div className='flex items-center gap-1.5 border w-fit p-1'>Qty {item.qty}
                 <div>
-                  <ChevronUp size={12} onClick={() => QuantityChange(item.id, item.qty + 1)} />
-                  <ChevronDown size={12} onClick={() => QuantityChange(item.id, item.qty - 1)} />
+                  <ChevronUp size={12} onClick={() => QuantityChange(item._id, item.qty + 1)} />
+                  <ChevronDown size={12} onClick={() => QuantityChange(item._id, item.qty - 1)} />
                 </div>
               </div>
               <button className='bg-red-500 text-white rounded px-2 py-1'
-                onClick={() => removeFromCart(item.id)}>Remove</button>
+                onClick={() => removeFromCart(item._id)}>Remove</button>
             </div>
           </div>
         </div>

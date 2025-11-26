@@ -2,7 +2,7 @@ import { useCart } from "../Context/CartContext";
 import { useState, useEffect , useCallback } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-
+import API_URL from "../config/api";
 const Checkout = () => {
   const navigate = useNavigate();
   const { cartItems, clearCart } = useCart();
@@ -25,8 +25,6 @@ const Checkout = () => {
     return token ? { 'Authorization': `Bearer ${token}` } : {};
   }, [token]);
 
-
-  const API_URL = 'https://e-commerce-l5st.onrender.com/api';
 
   const isFormValid = () => {
     return Object.values(userInfo).every(value => value.trim() !== '');

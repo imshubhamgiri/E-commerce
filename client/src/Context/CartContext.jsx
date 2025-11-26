@@ -50,7 +50,7 @@ export const CartStateProvider = ({ children }) => {
 
   // Remove product from cart
   const removeFromCart = (id) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
+    setCartItems((prev) => prev.filter((item) => item._id !== id));
   };
 
   // Clear cart completely

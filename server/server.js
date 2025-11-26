@@ -22,7 +22,7 @@ const app = express();
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
-  'https://e-commerce-three-beta-70.vercel.app',
+  'https://e-commerce-three-beta-70.vercel.app/',
   'https://e-commerce-git-main-imshubhamgiris-projects.vercel.app/',
   'https://e-commerce-af8ihh2tk-imshubhamgiris-projects.vercel.app'
 ];

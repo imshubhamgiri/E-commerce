@@ -5,6 +5,7 @@ import Productbanner from './Products/Productbanner';
 import Timestamp from './common/Timestamp';
 import { Button } from './ui/button';
 import { fetchProducts} from '../api/Productservice';
+import { useCart } from '../Context/CartContext';
 
 const Main = () => {
  
@@ -13,12 +14,16 @@ const Main = () => {
   const [flashproducts, setflashproducts] = useState([])
   const [loading, setloading] = useState(false)
   const[Bestselling, setBestSelling] = useState([])
+  const { cart, addToCart, removeFromCart } = useCart();
  
   useEffect(() => {
+    setloading(true);
+
     const getproducts = async() => {
       const products = await fetchProducts()
       const list = Array.isArray(products) ? products : [];
       setdbproducts(list)
+      setloading(false);
       // console.log('db products:', list) // Log here, not dbproducts
     } 
     getproducts();
@@ -77,26 +82,37 @@ const Main = () => {
                      <Timestamp />
                    </div>
                 </div>
-                {/* <Link to="/flashsales" className="flex items-center text-red-600 font-medium hover:underline hover:scale-105 transition-transform">
-                  See All Deals <ArrowLeft className="w-4 h-4 ml-1 rotate-180" />
-                </Link> */}
                 <div className='flex gap-1'>
                <span className='bg-gray-100 p-3 rounded-full '><ArrowLeft className="w-6 h-6 text-gray-400 hover:text-gray-600 cursor-pointer transition-colors" /></span> 
                 <span className='bg-gray-100 p-3 rounded-full '><ArrowRight className="w-6 h-6 text-gray-400 hover:text-gray-600 cursor-pointer transition-colors" /></span>
                 </div>
              </div>
-            <div className="flex py-3 w-full overflow-x-auto gap-4 flex-nowrap no-scrollbar">  {/* keep scrolling, hide native scrollbar */}
-                {flashproducts.map((items, i) => (
+            <div className="flex py-3 w-full overflow-x-auto gap-4 flex-nowrap no-scrollbar">
+                {loading ? (
+                  // Loading skeletons
+                  Array.from({ length: 5 }).map((_, i) => (
+                    <div 
+                      key={i} 
+                      className="relative bg-white p-4 rounded-lg shadow-md min-w-[200px] shrink-0 animate-pulse"
+                    >
+                      <div className="h-24 w-50 bg-gray-200 rounded mb-2"></div>
+                      <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                      <div className="h-5 bg-gray-200 rounded w-1/2"></div>
+                    </div>
+                  ))
+                ) : (
+                  flashproducts.map((items, i) => (
                     <div 
                       key={i} 
                       className="relative bg-white p-4 rounded-lg shadow-md hover:shadow-xl transition duration-300 min-w-[200px] shrink-0 group"
                     >
-                        <div className="h-24 w-50">
-                          <img src={items.imageUrl} className='object-cover h-full w-full' alt="" />
+                        <div className="h-24 w-50 relative">
+                          <img src={items.imageUrl} className='object-cover h-full w-full' alt={items.name} /><span className='rounded-full bg-white absolute 
+                        top-2 shadow-md right-2 text-black p-1'><Heart size={15} className='' /></span> 
                           </div>
 
                         {/* Add to cart button — hidden until hover */}
-                        <button
+                        <button onClick={() => addToCart(items)}
                           className="absolute left-1/2 -translate-x-1/2 bottom-20 w-40 cursor-pointer bg-black text-white  py-1 rounded opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200"
                           aria-label={`Add Item ${i+1} to cart`}
                         >
@@ -105,7 +121,8 @@ const Main = () => {
                         <p className="text-sm font-medium">{items.name}</p>
                         <p className="text-lg font-bold text-stone-600 mt-1">₹{items.price}</p>
                     </div>
-                ))}
+                  ))
+                )}
             </div>
               <div className='text-center mr-20 border-b pt-9 pb-12'>
                 <button className='bg-black transition-all duration-300 text-white py-2 px-4 rounded hover:text-sky-300 hover:bg-gray-800 hover:scale-105'>
@@ -165,15 +182,25 @@ const Main = () => {
                 <div className='flex items-center gap-10'>
                     <h2 className="text-3xl md:font-bold text-gray-800">Best Selling Products</h2>
                 </div>
-                {/* <Link to="/flashsales" className="flex items-center text-red-600 font-medium hover:underline hover:scale-105 transition-transform">
-                  See All Deals <ArrowLeft className="w-4 h-4 ml-1 rotate-180" />
-                </Link> */}
                 <div className='flex gap-1'>
                  <Button>View All Products</Button>
                 </div>
              </div>
-            <div className="flex py-3 w-auto overflow-x-auto   gap-8 flex-nowrap no-scrollbar">  {/* keep scrolling, hide native scrollbar */}
-                {Bestselling.map((items, i) => (
+            <div className="flex py-3 w-auto overflow-x-auto gap-8 flex-nowrap no-scrollbar">
+                {loading ? (
+                  // Loading skeletons for best selling products
+                  Array.from({ length: 5 }).map((_, i) => (
+                    <div 
+                      key={i} 
+                      className="relative bg-white p-4 rounded-lg shadow-md min-w-[200px] shrink-0 animate-pulse"
+                    >
+                      <div className="h-28 w-55 bg-gray-200 rounded mb-2"></div>
+                      <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                      <div className="h-5 bg-gray-200 rounded w-1/2"></div>
+                    </div>
+                  ))
+                ) : (
+                  Bestselling.map((items, i) => (
                     <div 
                       key={i} 
                       className="relative bg-white p-4 rounded-lg shadow-md hover:shadow-xl transition duration-300 min-w-[200px] shrink-0 group"
@@ -183,7 +210,7 @@ const Main = () => {
                         top-2 shadow-md right-2 text-black p-1'><Heart size={15} className='' /></span></div>
 
                         {/* Add to cart button — hidden until hover */}
-                        <button
+                        <button onClick={() => addToCart(items)}
                           className="absolute left-1/2 -translate-x-1/2 bottom-20 w-40 cursor-pointer bg-black text-white  py-1 rounded opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200"
                           aria-label={`Add Item ${i+1} to cart`}
                         >
@@ -192,7 +219,8 @@ const Main = () => {
                         <p className="text-sm font-medium">{items.name}</p>
                         <p className="text-lg font-bold text-stone-600 mt-1">₹{items.price}</p>
                     </div>
-                ))}
+                  ))
+                )}
             </div>
         </section>
 

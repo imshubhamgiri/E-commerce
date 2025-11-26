@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import API_URL from '../config/api';
 // check about valid email
 const isValidEmail = (email) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
 
@@ -23,7 +24,7 @@ const Login = ({ onSignUpSuccess = null }) => {
     setError('')
 
     try {
-      const response = await fetch('https://e-commerce-l5st.onrender.com/api/users/register', {
+      const response = await fetch(`${API_URL}/users/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

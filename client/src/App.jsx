@@ -16,6 +16,7 @@ import Registration from './components/Registration.jsx'
 import UserProfile from "./pages/UserProfile.jsx";
 import Success from "./pages/Success.jsx"
 import Order from "./components/Order.jsx"
+import ScrollToTop from "./components/Scrolltop.jsx"
 
 function RequireAuth({ children }) {
   const IsLoggedIn = Boolean(localStorage.getItem("token"));
@@ -26,6 +27,7 @@ function RequireAuth({ children }) {
 function App() {
   return (
     <CartStateProvider>
+      <ScrollToTop />
       <div className="min-h-screen flex flex-col">
         <Promotion />
         <Navbar2 />

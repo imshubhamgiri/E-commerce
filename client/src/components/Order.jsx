@@ -1,5 +1,6 @@
 import React, { useState , useEffect, useCallback } from 'react'
 import { fetchProductById } from '../api/Productservice';
+import API_URL from '../config/api';
 const Order = () => {
 const [Orders, setOrders] = useState([]);
 const [orderdetails, setorderdetails] = useState()
@@ -18,7 +19,7 @@ useEffect(() => {
 
         
             
-            const response = await fetch(`https://e-commerce-l5st.onrender.com/api/orders/${id}`, {
+            const response = await fetch(`${API_URL}/orders/${id}`, {
               headers: authHeaders()
             });
             const data = await response.json();
