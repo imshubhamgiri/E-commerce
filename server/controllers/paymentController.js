@@ -13,9 +13,10 @@ export async function createRazorpayOrder(req, res) {
       return res.status(404).json({ message: 'Order not found' });
     }
 
+    const amountInPaise = Math.round(Number(order.totalAmount) * 100);
     // Create Razorpay order
     const options = {
-      amount: order.totalAmount * 100, // amount in smallest currency unit (paise)
+      amount: amountInPaise, // amount in smallest currency unit (paise)
       currency: 'INR',
       receipt: `order_${orderId}`,
       notes: {
