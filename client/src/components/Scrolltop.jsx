@@ -5,13 +5,10 @@ function ScrollToTop() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   }, [pathname]); // Fires whenever the route changes
 
   return null;
 }
 
 export default ScrollToTop;
-
-// You wrap your main router component with this.
-// <Router> <ScrollToTop /> ... </Router>

@@ -4,29 +4,30 @@ import { ShoppingCart, Heart, Truck, RotateCcw } from 'lucide-react';
 import { useCart } from '../Context/CartContext.jsx';
 import { ToastContainer, toast } from 'react-toastify';
 import { fetchProductById } from '../api/Productservice.jsx';
+import { useQuery } from '@tanstack/react-query';
 
 const Productdetails = () => {
-  const { cartItems, addToCart } = useCart();
-
-  // accept either param name (id or _id) so route name doesn't break the component
+  const { addToCart } = useCart();
+  const [loading, setLoading] = useState(false);
   const params = useParams();
   const productId = params.id || params._id;
   const navigate = useNavigate();
   
   const [productDetails, setProductDetails] = useState(null);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [cartItemsState, setCartItems] = useState(cartItems || []);
 
   useEffect(() => {
     const fetchProduct = async () => {
+      setLoading(true)
       if (!productId) return;
       try {
         const product = await fetchProductById(productId);
-        // normalize shape if API returns { product: {...} } or { data: {...} }
         const p = product?.product || product?.data || product;
         setProductDetails(p);
       } catch (error) {
         console.error("Failed to fetch product details:", error);
+      }finally{
+        setLoading(false)
       }
     };
 
@@ -39,19 +40,22 @@ const Productdetails = () => {
     return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(value);
   }
   
-  // useEffect(() => {
-  //   console.log('Cart updated:', cartItems);
-  // }, [cartItems, productDetails?.name]);
 
   const handleBuyNow = () => {
-    // use _id or id depending on API shape
     const idForCheckout = productDetails?._id || productDetails?.id;
     navigate('/cart/checkout', { state: { productId: idForCheckout, qty: 1 } });
   }
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   }, [productId]);
+  if (loading) {
+    return (
+      <div className="p-8 max-w-4xl mx-auto flex justify-center items-center min-h-[50vh]">
+       <div className="animate-spin rounded-full text-center h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   if (!productDetails) {
     return (

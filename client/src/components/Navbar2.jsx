@@ -2,11 +2,15 @@ import { Heart, ShoppingCart, Search, User } from 'lucide-react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
 import { useCart } from '../Context/CartContext.jsx';
-  
+import { fetchProducts } from '../api/Productservice.jsx';
+import SearchResult from './ui/SearchResult.jsx';
 const Navbar2 = () => {
   const { cartItems } = useCart();
   const [IsLoggedIn, setIsLoggedIn] = useState(false);
   const location = useLocation();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   
   // Re-check token on mount and whenever the route changes (e.g. after login redirect)
   useEffect(() => {
@@ -21,6 +25,29 @@ const logout = () => {
   localStorage.removeItem('token')
   localStorage.removeItem('user')
   setIsLoggedIn(false)
+}
+
+const handleChange = (value) => {
+    setSearchQuery(value);
+    handleSearch(value)
+}
+const handleSearch = async(value) =>{
+
+    console.log("Search clicked");
+    setIsLoading(true);
+        await fetchProducts().then((res) => {
+        const product = res.filter((p) => {
+          return p &&  p.name.toLowerCase().includes(value.toLowerCase()) ||
+          p.description.toLowerCase().includes(value.toLowerCase())}
+        )
+        console.log("Search results:", product);
+        setProducts(product);
+    }).catch((error)=>{
+        console.error("Error fetching products:", error);   
+        
+    }).finally(()=>{
+        setIsLoading(false);
+    });
 }
 
   return (
@@ -80,13 +107,17 @@ const logout = () => {
                 <div className='relative'>
                     <input 
                         type="text"  
+                        value={searchQuery}
                         className='border rounded-sm w-64 px-2 py-1 pr-8' 
                         placeholder='Search Here'
+                        onChange=   {(e) => handleChange(e.target.value)}
                     />
                     <Search 
                         size={18} 
-                        className='absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer'
+                        className='absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer hover:scale-105 hover:text-black transition'
+                        onClick={() => handleSearch(searchQuery)}
                     />
+                    {searchQuery && <SearchResult results={products} isLoading={isLoading} />}
                 </div>
                 <span className='relative'><Heart size={18}/>
                  </span>
