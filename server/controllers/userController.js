@@ -80,3 +80,36 @@ export async function login(req, res) {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+
+export async function pgLogin(req , res){
+    const {email , password} = req.body
+    try {
+        const lquery = `SELECT * FROM users WHERE email = $1;`
+
+        const result =await pgPool.query(lquery, [email]);
+        if(result.rows.length===0) return res.status(401).json({
+            message:'invalid credentials'
+        })
+        const orgpass = result.rows[0].password
+        const isMatch = await bcrypt.compare(password , orgpass);
+
+        if(!isMatch) return res.status(403).json({
+            sucess:false,
+            message: 'invalid credentials'
+        })
+
+        const token = jwt.sign({ userId: result.rows[0].id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        res.status(200).json({
+            sucess:true,
+            message: 'Login successful',
+            token,
+            user: { id: result.rows[0].id, name: result.rows[0].name, email: result.rows[0].email }
+        })
+    } catch (error) {
+        console.log(error)
+       return res.status(500).json({
+        sucess:false,
+        message:'Internal Server Error'
+       })
+    }
+}
