@@ -1,9 +1,19 @@
 import Product from '../models/Products.js';
+import pgPool from '../config/pgdb.js';
 
 export const getAllProducts = async (req, res) => {
     try {
         const allProducts = await Product.find({});
         res.status(200).json(allProducts);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching products', error });
+    }
+};
+
+export const getAllProductsPg = async (req, res) => {
+    try {
+        const { rows } = await pgPool.query('SELECT * FROM products');
+        res.status(200).json(rows);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching products', error });
     }
