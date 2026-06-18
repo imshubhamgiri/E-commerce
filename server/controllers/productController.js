@@ -11,25 +11,86 @@ export const getAllProducts = async (req, res) => {
 };
 
 export const getAllProductsPg = async (req, res) => {
+    const { page = 1, limit = 10, category, brand, price } = req.query; // Example query parameters for pagination
+    // 1. Build the base WHERE clause conditions (Keep your existing code here)
+    let conditions = [];
+    let queryValues = [];
+    let paramIndex = 1;
+
+    if (category) {
+        conditions.push(`category = $${paramIndex}`);
+        queryValues.push(category);
+        paramIndex++;
+    }
+    if (brand) {
+        conditions.push(`brand = $${paramIndex}`);
+        queryValues.push(brand);
+        paramIndex++;
+    }
+    if (price) {
+        const [minPrice, maxPrice] = price.split('-');
+        conditions.push(`price BETWEEN $${paramIndex} AND $${paramIndex + 1}`);
+        queryValues.push(parseInt(minPrice), parseInt(maxPrice));
+        paramIndex += 2;
+    }
+
+    // Create the shared WHERE string
+    const whereClause = conditions.length > 0 ? " WHERE " + conditions.join(" AND ") : "";
+
+    // 2. Build the Total Count Query (Uses the exact same values array so far)
+    const countQuery = `SELECT COUNT(*) FROM products${whereClause}`;
+
+    // 3. Build the Product Fetch Query (Append LIMIT and OFFSET)
+    let productQuery = `SELECT * FROM products${whereClause}`;
+
+    if (limit) {
+        productQuery += ` LIMIT $${paramIndex}`;
+        queryValues.push(parseInt(limit));
+        paramIndex++;
+    }
+
+    const offset = (parseInt(page) - 1) * parseInt(limit);
+    productQuery += ` OFFSET $${paramIndex}`;
+    queryValues.push(offset);
+
     try {
-        const { rows } = await pgPool.query('SELECT * FROM products');
-        res.status(200).json(rows);
+        // Run both queries concurrently to save time
+        const [countResult, productResult] = await Promise.all([
+            pgPool.query(countQuery, queryValues.slice(0, paramIndex - 2)), // Only pass filter values to count
+            pgPool.query(productQuery, queryValues) // Pass all values including limit/offset
+        ]);
+
+        const totalItems = parseInt(countResult.rows[0].count);
+        const totalPages = Math.ceil(totalItems / parseInt(limit));
+
+        // Return everything structured neatly for your frontend
+        res.status(200).json({
+            metadata: {
+                totalItems,
+                totalPages,
+                currentPage: parseInt(page),
+                limit: parseInt(limit)
+            },
+            products: productResult.rows
+        });
+
     } catch (error) {
         res.status(500).json({ message: 'Error fetching products', error });
     }
+
 };
 
-export const getProductById = async(req, res) => {
-  try {
-    const { Id } = req.params;
-    const product = await Product.findById(Id);
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
+export const getProductById = async (req, res) => {
+    try {
+        const { Id } = req.params;
+        const product = await Product.findById(Id);
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+        res.status(200).json(product);
+    } catch (e) {
+        res.status(500).json({ message: 'Error fetching product', error: e });
     }
-    res.status(200).json(product);
-  } catch (e) {
-    
-  }
 }
 
 
@@ -42,3 +103,4 @@ export const addProduct = async (req, res) => {
         res.status(500).json({ message: 'Error adding product', error });
     }
 };
+
