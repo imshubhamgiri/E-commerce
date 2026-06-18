@@ -5,6 +5,6 @@ const userRouter = express.Router();
 
 // Public routes (no auth required)
 userRouter.post('/register', userController.RegisterPg);
-userRouter.post('/login', userController.login);
+userRouter.post('/login', userController.pgLogin);
 
 export default userRouter;
