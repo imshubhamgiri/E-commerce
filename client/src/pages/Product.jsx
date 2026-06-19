@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
 import { Link } from "react-router-dom";
-import { ArrowDown, ChevronDown, ChevronUp } from 'lucide-react';
-import { fetchProducts } from '../api/Productservice.jsx';
+import { fetchProducts, fetchProductFilters } from '../api/Productservice.jsx';
 import { useQuery } from '@tanstack/react-query';
-import { Categories } from '../data/product.js';
+import Filter from '../components/ui/filter.jsx';
+
 const Product = () => {
-  const [catdown, setcatdown] = useState(false)
-  const [SelectedCategory, setCategory] = useState('All')
+  const [SelectedCategory, setSelectedCategory] = useState('All')
   const [brands, setBrands] = useState([])
   const [page, setPage] = useState(1);
+  const [filtersDropdown, setFiltersDropdown] = useState(false);
   const [priceRange, setPriceRange] = useState({ min: 0, max: 10000 });
 
   const query = {
@@ -25,53 +25,59 @@ const Product = () => {
     staleTime: 40000,
   });
 
-  const categories = ['All', ...new Set(Categories.map(category => category.charAt(0).toUpperCase() + category.slice(1)))];
+  // Query just for filter metadata (categories/brands from DB)
+  const { data: filterData } = useQuery({
+    queryKey: ['productFilters'],
+    queryFn: fetchProductFilters,
+    staleTime: 1000 * 60 * 60 * 24, // 24 Hours in milliseconds
+  });
+
+
+  const rawCategories = filterData?.categories || [];
+  const backendBrands = filterData?.brands || [];
+
+  const categories = [
+    'All',
+    ...rawCategories.map(cat => cat.charAt(0).toUpperCase() + cat.slice(1))
+  ];
 
   const products = data?.products || [];
   const metadata = data?.metadata || {};
 
-  console.log('metadata:', metadata);
-  console.log('products:', products);
 
-  const setSelectedCategory = (category) => {
-    setCategory(category);
-    setcatdown(false); // Close the dropdown after selection
-  }
-  const handleblur = () => {
-    setTimeout(() => {
-      setcatdown(false);
-    }, 250);
-  }
+  const handleResetFilters = () => {
+    setSelectedCategory('All');
+    setBrands([]);
+    setPriceRange({ min: 0, max: 10000 });
+  };
 
   return (
     <div className='p-8'>
       <div className='flex justify-between mb-8'>
         <h2 className='text-2xl font-bold mb-4'>Products</h2>
-        <div className='relative'>
-          <button className='text-lg flex items-center font-semibold'
-            onClick={() => setcatdown(!catdown)}
-            onBlur={handleblur}
-          >
-            Category
-            <span>{catdown ? <ChevronUp /> : <ChevronDown />}</span>
-          </button>
-          {catdown && <div className='absolute text-black bg-gray-200 h-30 overflow-x-scroll no-scrollbar -left-18  mt-2 py-4 px-2 w-48  z-10'>
-            <div className="category-filter-buttons  w-full flex flex-col gap-2">
-              {categories.map(category => (
-                <button
-                  key={category}
-                  // The click handler updates the state
-                  onClick={() => setSelectedCategory(category)}
-                  // Highlight the active button for better UX
-                  className={`text-left w-full px-3 py-2 rounded hover:bg-gray-300 ${SelectedCategory === category ? 'bg-gray-400 font-bold' : ''}`}
-                >
-                  {category.charAt(0).toUpperCase() + category.slice(1)} {/* Capitalize first letter */}
-                </button>
-              ))}
-            </div>
-          </div>}
-        </div>
+        <button
+          className='px-4 py-2 rounded bg-gray-900 text-white hover:bg-gray-700'
+          onClick={() => setFiltersDropdown(true)}
+        >
+          Filters
+        </button>
       </div>
+
+      {/* Slide-in filter drawer */}
+      <Filter
+        isOpen={filtersDropdown}
+        onClose={() => setFiltersDropdown(false)}
+        categories={categories}
+        selectedCategory={SelectedCategory}
+        setSelectedCategory={setSelectedCategory}
+        brands={backendBrands}
+        selectedBrands={brands}
+        setSelectedBrands={setBrands}
+        priceRange={priceRange}
+        setPriceRange={setPriceRange}
+        onReset={handleResetFilters}
+      />
+
       {isLoading && <div className="flex justify-center items-center ">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>}
@@ -92,7 +98,6 @@ const Product = () => {
       </div>
       {metadata.totalPages > 1 && (
         <div className='flex justify-center items-center gap-2 mt-8 w-full max-w-5xl mx-auto'>
-          {/* Previous Button */}
           <button
             disabled={page <= 1}
             onClick={() => setPage((prev) => prev - 1)}
@@ -100,13 +105,9 @@ const Product = () => {
           >
             Previous
           </button>
-
-          {/* Page Status Indicator */}
           <span className='text-sm font-medium text-gray-700 mx-2'>
             Page {metadata.currentPage} of {metadata.totalPages}
           </span>
-
-          {/* Next Button */}
           <button
             disabled={page >= metadata.totalPages}
             onClick={() => setPage((prev) => prev + 1)}
@@ -116,7 +117,6 @@ const Product = () => {
           </button>
         </div>
       )}
-
     </div>
   )
 }
