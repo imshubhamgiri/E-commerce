@@ -23,8 +23,9 @@ export const getAllProductsPg = async (req, res) => {
         paramIndex++;
     }
     if (brand) {
-        conditions.push(`brand = $${paramIndex}`);
-        queryValues.push(brand);
+        const brandList = brand.split(',').map(b => b.trim());
+        conditions.push(`brand = ANY($${paramIndex})`);
+        queryValues.push(brandList);
         paramIndex++;
     }
     if (price) {
