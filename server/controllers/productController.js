@@ -83,12 +83,14 @@ export const getAllProductsPg = async (req, res) => {
 
 export const getProductById = async (req, res) => {
     try {
-        const { Id } = req.params;
-        const product = await Product.findById(Id);
-        if (!product) {
-            return res.status(404).json({ message: 'Product not found' });
-        }
-        res.status(200).json(product);
+        const { id } = req.params;
+        const Pgproduct = await pgPool.query('SELECT * FROM products WHERE id = $1', [id]);
+        // const product = await Product.findById(id);
+        // if (!product) {
+        //     return res.status(404).json({ message: 'Product not found' });
+        // }
+        // res.status(200).json(product);
+        res.status(200).json(Pgproduct.rows[0]);
     } catch (e) {
         res.status(500).json({ message: 'Error fetching product', error: e });
     }

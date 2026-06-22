@@ -22,7 +22,7 @@ productRouter.get('/filters', async (req, res) => {
         res.status(500).json({ message: 'Error fetching filters', error });
     }
 });
-productRouter.get('/:Id', getProductById); 
+productRouter.get('/:id', getProductById); 
 // productRouter.put('/:Id', updateProduct); // Update product route for admin role
 // productRouter.delete('/:Id', deleteProduct);
 
