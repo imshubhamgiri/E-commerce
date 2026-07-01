@@ -1,7 +1,7 @@
 import Product from "../models/Products.js";
 import Order from "../models/Order.js";
+import orderService from "../services/orderService.js";
 import pgPool from "../config/pgdb.js";
-
 export async function createOrder(req, res) {
     if(!req.user || !req.user.id) {
         return res.status(401).json({ message: "Unauthorized" });
@@ -39,70 +39,89 @@ export async function getUserOrders(req, res) {
 }
 
 
-export async function createPgOrder(req , res){
-    const { items, totalAmount, shippingAddress } = req.body;
-
-    const client = await pgPool.connect()
+export async function getPgOrders(req, res) {
     try {
-        const userId = req.user.id
-        //Step-1
-        await client.query('BEGIN'); // Start transaction
-        //inserting in adresstabl 
-        const adr_query = 'INSERT INTO ADDRESSES (user_id, name, email, phone, address) VALUES ($1, $2, $3, $4, $5) RETURNING id;'
-        const adr_values = [userId , shippingAddress.name , shippingAddress.email , shippingAddress.phone , shippingAddress.address];
-        const adr_id = await client.query(adr_query , adr_values);
-
-        //Step-2
-        //inserting into order table
-        const ord_T_val = [userId , Number(totalAmount) , adr_id.rows[0].id];
-
-        const query = 'INSERT INTO ORDERS (user_id , total_price , address_id ) VALUES($1 , $2 , $3) RETURNING id;'
-        const id = await client.query(query , ord_T_val);
-
-        //Step-3
-        //inserting in items table
-        const values = items.flatMap(item => [
-         id.rows[0].id,
-         item.productId,
-        Number(item.quantity),
-        Number(item.price)
-        ])
-
-        const placeholders = items.map((_, index) => {
-            const base = index * 4;
-            return `($${base + 1}, $${base + 2}, $${base + 3}, $${base + 4})`;
-          }).join(', ');
-          
-          // 3. Combine into a single bulk insert query
-          const items_query = `
-            INSERT INTO ORDER_ITEMS (order_id, product_id, quantity, price)
-            VALUES ${placeholders};
-          `;
-
-          await client.query(items_query , values)
-
-
-          for (const item of items) {
-            const updateStockQuery = `
-              UPDATE products 
-              SET stock = stock - $1 
-              WHERE id = $2;
-            `;
-            await client.query(updateStockQuery, [Number(item.quantity), item.productId]);
-          }
-
-          await client.query('COMMIT'); // Commit transaction
-
-          res.status(201).json({ message: "Order created successfully", order:id.rows[0]});
+        const { userId } = req.params;
+        const query = `
+        SELECT 
+            o.id AS order_id, 
+            o.total_price, 
+            o.status AS order_status, 
+            o.created_at, 
+            -- Address Details
+            a.name AS shipping_name, 
+            a.email AS shipping_email, 
+            a.phone AS shipping_phone, 
+            a.address AS shipping_address,
+            -- Nested Array of Order Items
+            COALESCE(
+                JSON_AGG(
+                    JSON_BUILD_OBJECT(
+                        'item_id', oi.id,
+                        'product_id', p.id,
+                        'product_name', p.name,
+                        'image_url', p.image_url,
+                        'category', p.category,
+                        'brand', p.brand,
+                        'quantity', oi.quantity,
+                        'price_at_purchase', oi.price
+                    )
+                ) FILTER (WHERE oi.id IS NOT NULL), '[]'
+            ) AS items
+        FROM orders o 
+        LEFT JOIN addresses a ON o.address_id = a.id 
+        LEFT JOIN order_items oi ON o.id = oi.order_id
+        LEFT JOIN products p ON oi.product_id = p.id 
+        WHERE o.user_id = $1 
+        GROUP BY o.id, a.id
+        ORDER BY o.created_at DESC;
+    `;
+        const result = await pgPool.query(query, [userId]);
+        res.status(200).json(result.rows);
     } catch (error) {
-        await client.query('ROLLBACK'); // Rollback transaction
+        console.error("Error fetching all orders:", error);
+        res.status(500).json({ message: "Failed to fetch all orders", error: error.message });
+    }
+}
+
+export async function createPgOrder(req , res){
+    try {
+                const { items, totalAmount, shippingAddress } = req.body;
+                const userId = req.user.id;
+
+                if (!Array.isArray(items) || items.length === 0) {
+                        return res.status(400).json({ message: "Order items are required" });
+                }
+
+                const result = await orderService.createPgOrder({
+                        userId,
+                        items,
+                        totalAmount,
+                        shippingAddress,
+                });
+
+                res.status(201).json({
+                        message: "Order created successfully",
+                        order: { id: result.orderId },
+                });
+    } catch (error) {
         console.log('Error creating order:', error);
         res.status(500).json({ message: "Failed to create order", error: error.message });
-    }finally {
-        await client.release(); // Close the connection
     }
 
 
     
     
+}
+
+
+export async function deleteOrder(req, res) {
+    try {
+        const { orderId } = req.params;
+        await pgPool.query('DELETE FROM orders WHERE id = $1;', [orderId]);
+        res.status(200).json({ message: 'Order deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting order:', error);
+        res.status(500).json({ message: 'Failed to delete order', error: error.message });
+    }
 }
