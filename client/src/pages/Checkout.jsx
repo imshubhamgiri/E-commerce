@@ -59,6 +59,7 @@ const Checkout = () => {
       document.body.appendChild(script);
     });
   };
+  console.log("Starting checkout process with shipping data:", shippingData, "and cart items:", cartItems);
 
   const handleCheckout = async (e) => {
     e.preventDefault();
@@ -85,8 +86,9 @@ const Checkout = () => {
         body: JSON.stringify({
           shippingAddress: shippingData,
           items: cartItems.map(item => ({
-            productId: item._id,
-            qty: item.qty
+            productId: item.id,
+            qty: item.qty,
+            price:item.price
           })),
           totalAmount: total
         })
@@ -102,12 +104,13 @@ const Checkout = () => {
 
       const orderData = await orderResponse.json();
       console.log("Order created:", orderData);
+      const OrderId = orderData.order.id;
 
       // Step 2: Create Razorpay order
       const razorpayResponse = await fetch(`${API_URL}/payments/create-razorpay-order`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ orderId: orderData._id })
+        body: JSON.stringify({ orderId: OrderId })
       });
 
       if (!razorpayResponse.ok) {
@@ -151,7 +154,7 @@ const Checkout = () => {
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature,
-                orderId: orderData._id
+                orderId: OrderId
               })
             });
 
@@ -240,9 +243,9 @@ const Checkout = () => {
           <div className="border p-4 rounded">
             <h3 className="text-lg font-medium mb-2">Order Summary</h3>
             {cartItems.map((item) => (
-              <div key={item._id} className="flex justify-between border-b py-1">
+              <div key={item.id} className="flex justify-between border-b py-1">
                 <span>
-                  <img src={item.imageUrl} alt="" className='w-15 h-15 object-cover inline' />
+                  <img src={item.image_url} alt="" className='w-15 h-15 object-cover inline' />
                   {item.name} × {item.qty}
                 </span>
                 <span>₹{item.price * item.qty}</span>
