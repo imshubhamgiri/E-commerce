@@ -43,7 +43,11 @@ app.use(cors({
   credentials: true
 }));
 // ============ End CORS Configuration ============
-
+app.use((req ,res , next)=>{
+  const timestamp = new Date().toISOString();
+  console.log(`${req.method}-${req.url} time ${timestamp}`)
+  next()
+})
 // Connect to Database
 connectDB();
 
