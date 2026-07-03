@@ -57,8 +57,8 @@ useEffect(() => {
           )}
       
       {Orders.map(order => (
-        <div key={order._id} className='border w-full mb-6 p-4 rounded-lg bg-white shadow-md'>
-          <h3>Order ID: {order._id}</h3>
+        <div key={order.order_id} className='border w-full mb-6 p-4 rounded-lg bg-white shadow-md'>
+          <h3>Order ID: {order.order_id}</h3>
           {/* <p>Date: {new Date(order.createdAt).toLocaleDateString()}</p>
           <p>Status: {order.status}</p>
           <p>Total: ₹{order.totalAmount}</p> */}
@@ -66,33 +66,33 @@ useEffect(() => {
           {/* Products List */}
           <div className='mt-4'>
             <h4 className='font-semibold mb-2'>Products:</h4>
-            {order.products?.map((product, index) => (
+            {order.items?.map((product, index) => (
               <div key={index} className='border-t pt-2 mt-2 flex gap-4'>
                 {/* Product Image */}
-                {product.productId?.imageUrl && (
+                {product.image_url && (
                   <img 
-                    src={product.productId.imageUrl} 
-                    alt={product.productId.name} 
+                    src={product.image_url} 
+                    alt={product.product_name} 
                     className='w-20 h-20 object-cover rounded'
                   />
                 )}
                 
                 <div className='flex-1'>
-                  <p className='font-semibold'>{product.productId?.name}</p>
-                  <p className='text-sm text-gray-600'>{product.productId?.brand}</p>
-                  <p>Quantity: {product.qty}</p>
-                  <p>Price: ₹{product.productId.price}</p>
-                  <p className='font-semibold'>Subtotal: ₹{product.qty * product.productId.price}</p>
+                  <p className='font-semibold'>{product.product_name}</p>
+                  <p className='text-sm text-gray-600'>{product.brand}</p>
+                  <p>Quantity: {product.quantity}</p>
+                  <p>Price: ₹{product.price_at_purchase}</p>
+                  <p className='font-semibold'>Subtotal: ₹{product.quantity * product.price_at_purchase}</p>
                      <div>
-                      <p>Ordered On: {new Date(order.createdAt).toLocaleDateString()}</p>
+                      <p>Ordered On: {new Date(order.created_at).toLocaleDateString()}</p>
                   <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    order.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
-                    order.status === 'confirmed' ? 'bg-green-100 text-green-800' :
-                    order.status === 'Shipped' ? 'bg-blue-100 text-blue-800' :
-                    order.status === 'Delivered' ? 'bg-green-100 text-green-800' :
+                    order.order_status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
+                    order.order_status === 'confirmed' ? 'bg-green-100 text-green-800' :
+                    order.order_status === 'Shipped' ? 'bg-blue-100 text-blue-800' :
+                    order.order_status === 'Delivered' ? 'bg-green-100 text-green-800' :
                     'bg-red-100 text-red-800'
                   }`}>
-                    {order.status.toUpperCase()}
+                    {order.order_status.toUpperCase()}
                   </span>
                 </div>
                 </div>

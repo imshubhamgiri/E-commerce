@@ -44,7 +44,7 @@ const Productdetails = () => {
   
 
   const handleBuyNow = () => {
-    const idForCheckout = productDetails?._id || productDetails?.id;
+    const idForCheckout = productDetails?.id || productDetails?.id;
     navigate('/cart/checkout', { state: { productId: idForCheckout, qty: 1 } });
   }
 

@@ -32,7 +32,7 @@ const CartProvider = ({ cartItems }) => {
     // window.location.reload(); // Simple way to refresh the component to reflect changes
     setCartItems((prev) =>
       prev.map((item) =>
-        item._id === id ? { ...item, qty: newqty } : item
+        item.id === id ? { ...item, qty: newqty } : item
       )
     );
   }
@@ -42,25 +42,25 @@ const CartProvider = ({ cartItems }) => {
   return (
     <div className='p-8 w-full max-w-3xl'>
       {cartItems.map(item => (
-        <div key={item._id} className='border-b grid grid-cols-2 border-gray-200 py-4'>
+        <div key={item.id} className='border-b grid grid-cols-2 border-gray-200 py-4'>
           <div>
             <Link to={`/product/${item.id}`}>
-              <img src={item.imageUrl} alt={item.name} className='w-32 h-32 object-cover' />
+              <img src={item.image_url} alt={item.name} className='w-32 h-32 object-cover' />
             </Link>
           </div>
           <div>
             <h2 className='text-lg font-semibold'>{item.name}</h2>
             <p className='text-gray-600'>{item.description}</p>
-            <p className='text-gray-800 font-bold'>${item.price}</p>
+            <p className='text-gray-800 font-bold'>₹{item.price}</p>
             <div className='mt-2 flex justify-between'>
               <div className='flex items-center gap-1.5 border w-fit p-1'>Qty {item.qty}
                 <div>
-                  <ChevronUp size={12} onClick={() => QuantityChange(item._id, item.qty + 1)} />
-                  <ChevronDown size={12} onClick={() => QuantityChange(item._id, item.qty - 1)} />
+                  <ChevronUp size={12} onClick={() => QuantityChange(item.id, item.qty + 1)} />
+                  <ChevronDown size={12} onClick={() => QuantityChange(item.id, item.qty - 1)} />
                 </div>
               </div>
               <button className='bg-red-500 text-white rounded px-2 py-1'
-                onClick={() => removeFromCart(item._id)}>Remove</button>
+                onClick={() => removeFromCart(item.id)}>Remove</button>
             </div>
           </div>
         </div>
