@@ -22,8 +22,10 @@ const Productdetails = () => {
       if (!productId) return;
       try {
         const product = await fetchProductById(productId);
-        const p = product?.product || product?.data || product;
+        console.log('Fetched product details:', product);
+        const p = product;
         setProductDetails(p);
+        console.log('Product details set in state:', p);
       } catch (error) {
         console.error("Failed to fetch product details:", error);
       }finally{
@@ -35,10 +37,10 @@ const Productdetails = () => {
   }, [productId]);
 
   // format price the same way as Product page (use actual value, don't divide by 100)
-  const formatPrice = (value) => {
-    if (typeof value !== 'number') return '-';
-    return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(value);
-  }
+  // const formatPrice = (value) => {
+  //   if (typeof value !== 'number') return '-';
+  //   return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(value);
+  // }
   
 
   const handleBuyNow = () => {
@@ -57,7 +59,7 @@ const Productdetails = () => {
     );
   }
 
-  if (!productDetails) {
+  if (!loading && !productDetails) {
     return (
       <div className="p-8 max-w-4xl mx-auto">
         <Link to="/products" className="text-sm text-sky-600 hover:underline">← Back to products</Link>
@@ -68,7 +70,7 @@ const Productdetails = () => {
 
   const images = Array.isArray(productDetails.imageUrl) && productDetails.imageUrl.length
     ? productDetails.imageUrl
-    : [productDetails.imageUrl];
+    : [productDetails.image_url];
 
   return (
     <>
@@ -112,9 +114,9 @@ const Productdetails = () => {
             <p className="mt-2 text-gray-600">{productDetails.shortDescription || productDetails.description}</p>
 
             <div className="mt-4 flex items-baseline gap-3">
-              <span className="text-3xl font-bold text-gray-900">{formatPrice(productDetails.price)}</span>
-              {productDetails.originalPrice && (
-                <span className="text-sm line-through text-gray-400">{formatPrice(productDetails.originalPrice)}</span>
+              <span className="text-3xl font-bold text-gray-900">{productDetails.price}</span>
+              {productDetails.original_price && (
+                <span className="text-sm line-through text-gray-400">{productDetails.original_price}</span>
               )}
             </div>
 
@@ -123,7 +125,7 @@ const Productdetails = () => {
               <li className="flex items-center gap-2"><RotateCcw size={16} /> 30-day returns</li>
               {productDetails.stock !== undefined && (
                 <li className={`font-medium ${productDetails.stock > 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
-                  {productDetails.stock > 0 ? 'In stock' : 'Out of stock'}
+                  {productDetails.stock > 0 ? `In stock (${productDetails.stock})` : 'Out of stock'}
                 </li>
               )}
             </ul>
