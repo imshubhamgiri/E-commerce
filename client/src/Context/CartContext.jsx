@@ -34,10 +34,10 @@ export const CartStateProvider = ({ children }) => {
   // Add a product to cart
   const addToCart = (product) => {
     setCartItems((prev) => {
-      const existing = prev.find((item) => item._id === product._id);
+      const existing = prev.find((item) => item.id === product.id);
       if (existing) {
         return prev.map((item) =>
-          item._id === product._id
+          item.id === product.id
             ? { ...item, qty: item.qty + 1 }
             : item
         );
@@ -50,7 +50,7 @@ export const CartStateProvider = ({ children }) => {
 
   // Remove product from cart
   const removeFromCart = (id) => {
-    setCartItems((prev) => prev.filter((item) => item._id !== id));
+    setCartItems((prev) => prev.filter((item) => item.id !== id));
   };
 
   // Clear cart completely
