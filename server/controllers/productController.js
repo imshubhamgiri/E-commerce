@@ -107,3 +107,19 @@ export const addProduct = async (req, res) => {
     }
 };
 
+
+export const getFilter = async(req , res) =>{
+    try {
+        // Run both queries concurrently
+        const [categoriesResult, brandsResult] = await Promise.all([
+            pgPool.query('SELECT DISTINCT category FROM products WHERE category IS NOT NULL ORDER BY category ASC'),
+            pgPool.query('SELECT DISTINCT brand FROM products WHERE brand IS NOT NULL ORDER BY brand ASC')
+        ]);
+        res.status(200).json({
+            categories: categoriesResult.rows.map(row => row.category),
+            brands: brandsResult.rows.map(row => row.brand)
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching filters', error });
+    }
+}
