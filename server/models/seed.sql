@@ -11,4 +11,8 @@ VALUES
 
 --check users and products
 SELECT * FROM users;
-SELECT * FROM products;
+
+Explain SELECT * FROM users ;
+
+Explain analyze
+SELECT * FROM products where category = 'Electronics' and price < 100;
